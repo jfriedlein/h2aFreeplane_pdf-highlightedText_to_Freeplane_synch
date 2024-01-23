@@ -69,6 +69,7 @@ def findChildrenGenerations ( node_with_pdf, node_type )
     if ( node_type.equals("annot_nodes_only") )
     {
 	   // Collect children, grandchildren, and grand-grandchildren to work on "all" sub-nodes
+       // @note It is possible that a child is not an annotation-node, but that a child of this non-annotation-node is still an annotation-node
 		// Collect all children of this node
 		node_with_pdf.children.each
 		{
@@ -80,12 +81,14 @@ def findChildrenGenerations ( node_with_pdf, node_type )
 		}
 
 		// Collect all grandchildren (children2)
-		node_children1.each
+        def node_children2_all = []
+		node_with_pdf.children.each
 		{
 		   node2 ->
 		   node2.children.each
 		   {
     		   child2 ->
+               node_children2_all = node_children2_all + child2
 		   	   if ( child2["annot_ID"] )
     		   {
         		   node_children2 = node_children2 + child2
@@ -94,7 +97,7 @@ def findChildrenGenerations ( node_with_pdf, node_type )
 		}
 
 		// Collect all grand-grandchildren (children3)
-		node_children2.each
+		node_children2_all.each
 		{
 		   node3 ->
 		   node3.children.each
@@ -416,11 +419,11 @@ try
         		 child.attributes.set("annot_type",annot_type)
         		 child.attributes.set("annot_ID",annot_ID)
         		 child.attributes.set("annot_modTime_PDF",annot_time)
-			 child.attributes.set("annot_status","ok")
+        		 child.attributes.set("annot_status","ok")
         		 lastModTime = child.lastModifiedAt.toString()
                  child.attributes.set("annot_modTime_Freeplane",lastModTime)
 
-		child.link.text = 'menuitem:_H2aOpenPdfOnAnnotPage_on_single_node'
+        		 child.link.text = 'menuitem:_H2aOpenPdfOnAnnotPage_on_single_node'
 
             	   if ( debugging >= 2 )
             	   {
@@ -428,7 +431,7 @@ try
             	   }
 
                 // Append the freshly added annotation to the list of imported annotation
-    	         list_of_all_entries =  list_of_all_entries + [annot_text + ES + annot_ID]
+    	         list_of_all_entries =  list_of_all_entries + [ annot_text.replace( '\n', line_break_replacer ) + ES + annot_ID ]
         	     
            	    if ( debugging >= 1 ) 
                 {
@@ -563,7 +566,7 @@ try
     	        
     	        // @todo Somehow centralise the order in which the data is stored (page, type, ID, ...)
     	         writer.writeLine (
-    	                            child.text + ES
+    	                            child.text.replace('\n',line_break_replacer) + ES
     	                            + child["annot_page"] + ES
     	                            + child["annot_type"] + ES
     	                            + child["annot_ID"] + ES
