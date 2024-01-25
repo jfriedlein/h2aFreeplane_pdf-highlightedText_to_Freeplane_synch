@@ -4,6 +4,9 @@
 //  - Use of attributes [https://docs.freeplane.org/api/org/freeplane/api/Attributes.html], [https://docs.freeplane.org/api/org/freeplane/api/NodeRO.html]
 //  - Hide attributes in the mindmap [https://sourceforge.net/p/freeplane/discussion/758437/thread/3b5e7fad44/]
 
+// @todo How to avoid attributes to pop-up when hovering over node?
+// @todo add attribute to parent pdf node with option output_mode to e.g. select "update_auto" instead of default "update_new"
+
 // Import colours for printing text node.text red when an error occurs
 import java.awt.Color
 
@@ -54,10 +57,11 @@ line_break_replacer = ' ;xnx; '
 
 error_phrase = ">ERROR>"
 
-// Choose a debugging level, that is active when use node scripts via println or in "log" files. 0=no debugging output, 1=first level of debugging outputs, 2=...
+// Choose a debugging level, that is active when use node scripts via println or in "log" files. 0=no debugging output, 1=first level of debugging outputs, 2=..., 99=all levels
  debugging = 0
 
 
+// @todo try using find(*) or findAll(*) from [https://docs.freeplane.org/api/org/freeplane/api/ControllerRO.html#findAll()]
 def findChildrenGenerations ( node_with_pdf, node_type )
 {
     // @todo-optimize Easily optimisable, e.g. by calling the function again on the sub-nodes etc.
@@ -273,6 +277,7 @@ try
 	   // Read each line, so each annotation
 	    line ->
 	   
+       if ( debugging >= 4 ) { println "line="+line}
 	   // Each line contains an annotation, the information is grouped into a single string (see "h2a_highlightedText_to_annotation.py")
 	    line_split = line.split( ES )
 	    annot_text = line_split[0].replace( line_break_replacer, '\n' )
@@ -435,7 +440,7 @@ try
         	     
            	    if ( debugging >= 1 ) 
                 {
-            	    println "list of all_end after="
+            	    println "list_of_all_entries after="
                     println list_of_all_entries
                 }
 	        }
