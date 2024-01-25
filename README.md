@@ -20,6 +20,7 @@ Starting from pdf-files of publications, books, etc. with highlighted text and n
 <img src="https://github.com/jfriedlein/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch/blob/main/docu/Freeplane%20with%20successfully%20loaded%20h2aFreeplane%20scripts.png" width=50% height=50%>
 
 7. You can assign hotkeys to the execution of both scripts. I prefer "alt+h" for exeuction of "H2a Freeplane", and "alt+p" for execution of "H2a Open Pdf on Annot Page"
+8. To hide the attributes and attribute symbols for the annotation nodes: View->Node attributes->"Hide all attributes" and turn off "Show icon for attributes"
 
 ## Usage
 Exemplary pdf with highlighted text:
