@@ -6,6 +6,8 @@ Freeplane script to organise highlighted text and notes from pdf files as Freepl
 ## What it does
 Starting from pdf-files of publications, books, etc. with highlighted text and notes, the Freeplane groovy script, with help of Python executables, extracts highlighted texts and notes from the pdf and enters it as nodes into Freeplane. The nodes in Freeplane can automatically be synchronised with the PDF, so all changes done in Freeplane to the annotations are written back into the PDF and vice versa. This is similar to the PDF handling capabilities of Docear.
 
+<img src="https://github.com/jfriedlein/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch/blob/main/docu/h2aFreeplane%20-%20overview.png" width=75% height=75%>
+
 ## Installation and setup
 1. Install the mindmapping software Freeplane
 2. Download the h2aFreeplane package (at the moment download this repository), unpack the folder somewhere on your hard drive, e.g. "~/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch"
