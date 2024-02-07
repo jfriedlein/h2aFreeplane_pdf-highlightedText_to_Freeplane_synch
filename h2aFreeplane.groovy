@@ -197,6 +197,16 @@ try
 		logger.severe(message_text, e) 
 		return false
 	 }
+    // Extract command line options if present
+     h2a_options = ""
+     if ( node_with_pdf["update_procedure"] )
+     {
+        h2a_options = " '"+node_with_pdf["update_procedure"]+"'"
+     }
+     else
+     {
+        node_with_pdf.attributes.set("update_procedure","update_new")
+     }
 
 	// Get the path to the PDF
 	path_to_pdf = node_with_pdf.link.file.toString()
@@ -205,11 +215,11 @@ try
 	
 	if ( operatingSystem == "Linux" )
 	{
-        	command = ["bash","-c",'"'+path_to_h2a_caller +'" "' + path_to_pdf + '" '+'"'+ path_file_output+'"']
+        	command = ["bash","-c",'"'+path_to_h2a_caller +'" "' + path_to_pdf + '" '+'"'+ path_file_output+'"' + h2a_options]
 	}	
-else if ( operatingSystem ==  "Windows" )
+    else if ( operatingSystem ==  "Windows" )
 	{
-		command = "\""+path_to_h2a_caller.replace("\\","/")+"\" "+path_to_pdf.replace(" ","%20").replace("\\","/")+" "+path_file_output.replace(" ","%20").replace("\\","/")
+		command = "\""+path_to_h2a_caller.replace("\\","/")+"\" "+path_to_pdf.replace(" ","%20").replace("\\","/")+" "+path_file_output.replace(" ","%20").replace("\\","/") + h2a_options
 		//command = "python \"/Z:/5. Promotion_WD/commonFiles/PDF_save_highlighted_text_into_annotation/h2a_pdf-highlightedText_to_annotation/h2aFreeplane_caller.py\" "+path_to_pdf.replace(" ","%20").replace("\\","/")+" "+path_file_output.replace(" ","%20").replace("\\","/")
 	}
 
@@ -286,7 +296,11 @@ try
 	    annot_ID = line_split[3].toString()
 	    annot_time = line_split[4].toString()
 	   
-	   list_of_annotIDs_in_pdf.add( annot_ID )
+	   // Collect the annotations to later check if any was deleted in the PDF.
+	   // @note We combine the annotation-ID with the annotation-page to create a unique string.
+	   //       In case the annotation-ID was created by PyMuPDF the ID is only page-unique, 
+	   //       so we need to append the page-number to make it PDF-unique.
+	    list_of_annotIDs_in_pdf.add( annot_ID+" on page "+annot_page )
 	   
 	   if ( debugging >= 2 ) { println "annot_ID="+annot_ID+" ; annot_text="+annot_text +" ; annot_time="+annot_time}
 	   
@@ -307,11 +321,15 @@ try
 	       	       
 	       // Extract the annotation ID from the child's attribute
 	        node_annot_ID = child["annot_ID"].toString()
+	        node_annot_page = child["annot_page"]
 
-	       if ( debugging >= 3 ) { println "child="+child+" ; annot_ID="+node_annot_ID }
+	       if ( debugging >= 3 ) { println "child="+child+" ; annot_ID="+node_annot_ID+" ; on annot_page="+node_annot_page }
 
+           // We search for the annotation by its ID and by the page. Usually the ID should be unique in the PDF,
+           //  but if the ID was created by PyMuPDF then the ID is only page-unique, so unique on this page (which is useless),
+           //  so we also need to check for the page of the annotation
            // @note For ".equals" to work here properly, we need to use ".toString()" on the strings to be compared [https://stackoverflow.com/questions/77081424/groovy-not-all-strings-that-are-equal-are-equal]
-	        if ( annot_ID.equals( node_annot_ID ) )
+	        if ( annot_ID.equals( node_annot_ID ) && annot_page.equals( node_annot_page )  )
 	        {
 	           // State: Found the node that matches the annotation ID, so the corresponding node already exists
 	           // The H2A-protocal is deleted in Freeplane, because it can be quite large, so it is not shown, but still exists in the PDF
@@ -322,16 +340,16 @@ try
 	               annot_ID_Found = true
 	               return true // break the node_children123.any, because we are done with this annot_ID
 	            }
-		   // If the child.text contains the error phrase and the annot_status is error, the error is still unresolved
-		   else if (  child["annot_status"].contains("error")  )
-		   {
-			if ( child.text.contains( error_phrase ) )
-			{
-				// @STATE: Found an annotation that was changed in the pdf and in Freeplane. The child.text still contains the error-phrase, so the error is still unresolved. The user needs to clean this thereby removing the catch phrase to again activate h2a on this annotation
-				annot_ID_Found = true
-				return true
-			}
-		   }
+    		   // If the child.text contains the error phrase and the annot_status is error, the error is still unresolved
+    		    else if ( child["annot_status"].contains("error") )
+    		    {
+        			if ( child.text.contains( error_phrase ) )
+        			{
+        				// @STATE: Found an annotation that was changed in the pdf and in Freeplane. The child.text still contains the error-phrase, so the error is still unresolved. The user needs to clean this thereby removing the catch phrase to again activate h2a on this annotation
+        				annot_ID_Found = true
+        				return true
+        			}
+    		    }
 	           
 	           // Extract the time when the annotation in this node was last modified in the PDF
 	            node_annot_time = child["annot_modTime_PDF"].toString()
@@ -377,29 +395,33 @@ try
 	                    // @todo Which one to take? But show ui.message with selection/merge
 
 	                    if ( !child.text.contains( error_phrase ) && child["annot_status"] == "error" )
-			    {
-				// @STATE: We consider a node which was previously detected as error, due to changes in pdf and in freeplane. We know this happened to this node, because of the annot_status. But the contradicting changes, where resolved because even though the status is "error", the error-phrase in the child.text is missing. Therefore, we can see this error as resolved and continue as usual.
-					child.attributes.set("annot_status","ok")
-					// @todo If the user manually changed the text colour, e.g. to blue, this will remove user colours
-					child.style.setTextColor()
-			    }
-			    else
-			   {
-				// We add the error-phrase to the text and set the annot_status to "error"
-	                        child.text = error_phrase + "\n>PDF>\n" + annot_text+"\n>Freeplane>\n" + child.text
-				child.style.setTextColor(Color.red)
-				child.attributes.set("annot_status","error")
+        			    {
+            				// @STATE: We consider a node which was previously detected as error, due to changes in pdf and in freeplane.
+            				//         We know this happened to this node, because of the annot_status. But the contradicting changes,
+            				//         where resolved because even though the status is "error", the error-phrase in the child.text is missing.
+            				//         Therefore, we can see this error as resolved and continue as usual.
+        					child.attributes.set("annot_status","ok")
+        					// @todo If the user manually changed the text colour, e.g. to blue, this will remove user colours
+        					child.style.setTextColor()
+        			    }
+        			    else
+        			    {
+            				// We add the error-phrase to the text and set the annot_status to "error"
+        	                child.text = error_phrase + "\n>PDF>\n" + annot_text+"\n>Freeplane>\n" + child.text
+            				child.style.setTextColor(Color.red)
+            				child.attributes.set("annot_status","error")
 	                    }
 	                }
 	                // Update the time, because it changed by overwriting "child.text" above. It is important the the stored time "annot_modTime_Freeplane" is equal to the lastModifiedAt time for the above ".equals" to work
 	                 child.lastModifiedAt = node_lastModified
 	                annot_ID_Found = true
-	                return true // break the  node_children123.any, because we are done with this annot_ID
+	                return true // break the node_children123.any, because we are done with this annot_ID
 	           } // end Check of modTime-PDF
 	        } // end Check of annot-ID
 	   } // end node_children123.any
 	   
-	   // We looped over each node, but did not find a node with the annot_ID from the pdf. And if we currently do not process the H2A-protocol, which should not be shown in Freeplane. Then we create the node.
+	   // We looped over each node, but did not find a node with the annot_ID from the pdf.
+	   //  And if we currently do not process the H2A-protocol, which should not be shown in Freeplane. Then we create the node.
 	    if ( annot_ID_Found == false && !annot_text.contains('H2A-protocol:') )
 	    {
     	  	if ( debugging >= 1 ) 
@@ -465,7 +487,7 @@ try
 	  node_children123_updated.each
 	  {
           child ->
-    	  list_of_all_annotIDs_updated = list_of_all_annotIDs_updated + [child["annot_ID"]]
+    	  list_of_all_annotIDs_updated = list_of_all_annotIDs_updated + [ child["annot_ID"]+" on page "+child["annot_page"] ]
 	  }
       
 	  list_of_annots_in_Freeplane_but_not_in_pdf = list_of_all_annotIDs_updated - list_of_annotIDs_in_pdf
@@ -481,7 +503,7 @@ try
 	 	   node_children123_updated.any
 	       {
     	       child ->
-    	       if ( child["annot_ID"] && child["annot_ID"].equals(annot_ID_toBeDeleted) )
+    	       if ( child["annot_ID"] && child["annot_page"] && (child["annot_ID"]+" on page "+child["annot_page"]).equals(annot_ID_toBeDeleted) )
     	       {
         	       child.delete()
         	       //ui.informationMessage("deleted "+annot_ID_toBeDeleted+ " vs "+child["annot_ID"])
@@ -549,8 +571,9 @@ try
     	     def modTime_freeplane = child["annot_modTime_Freeplane"]
     	     def node_lastModified = child.lastModifiedAt.toString()
     	
-    	    // If the lastModified time does not equal the modTime_freeplane done by this script, then the node text must have been modified manually, so output it to outputFileName
-    	     if ( !node_lastModified.equals(modTime_freeplane) )
+    	    // If the lastModified time does not equal the modTime_freeplane done by this script,
+    	    //  then the node text must have been modified manually, so output it to outputFileName
+    	     if ( !node_lastModified.equals(modTime_freeplane) && child["annot_status"] != "error" )
     	     {
         	    if ( debugging >= 1 )
         	    {
