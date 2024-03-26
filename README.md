@@ -1,7 +1,9 @@
 # h2aFreeplane_pdf-highlightedText_to_Freeplane_synch
 Freeplane script to organise highlighted text and notes from pdf files as Freeplane mindmap. This is very helpful to organise the information from many pdfs (usually spread and hidden in many annotations) as a mindmap, similar to Docear.
 
-# Currently in testing state! This will probably take up entire 2024 to be certain h2aFreeplane is reliable. When testing is done an official "Release" will be available.
+# Currently in testing state! This will probably take up entire 2024 to be certain h2aFreeplane is reliable. When testing is done and the implementation is cleaned and documented, an official "Release" will be available.
+# Testing status (14.02.2024): ~240 pdfs, ~7000 annotations
+
 
 ## What it does
 Starting from pdf-files of publications, books, etc. with highlighted text and notes, the Freeplane groovy script, with help of Python executables, extracts highlighted texts and notes from the pdf and enters it as nodes into Freeplane. The nodes in Freeplane can automatically be synchronised with the PDF, so all changes done in Freeplane to the annotations are written back into the PDF and vice versa. This is similar to the PDF handling capabilities of Docear.
@@ -74,5 +76,6 @@ Docear (https://docear.org/) is a fantastic system, which might has been born to
 ## ToDo
 - Annotation nodes need to stay as children (or grandchildren, ...) of the parent pdf-node, because only the parent pdf-node contains the link to the PDF as node link. So you cannot move an annotation node somewhere completely else, which was possible in Docear. The former approach is beneficial in case the path to the pdf changes, then we only need to change the path once in the parent node.
 - When using the button in front of an annotation node to open the pdf on the corresponding page, you need to click on the node first to select it. The script does not know which node started it based on the button, but only based on the currently selected node.
+- When hovering over the nodes the attributes and notes pop-up. This can be distracting, but is a Freeplane settings. Can this be deactivated?
 - Currently hardcoded to timezone Europe/Berlin
 - Check different timezone formats such as SumatraPDF "...Z" instead of "+1'00"
