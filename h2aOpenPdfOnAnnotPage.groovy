@@ -5,8 +5,8 @@
 // @note For Windows the paths to the pdf-viewer executables can contain blank spaces but all backslashes "\" need to be replaced by slashes "/" for the paths to work in Java
 
 // USER-Parameters
-pdf_viewer_Linux = "okular"
-pdf_viewer_Windows = "sumatra"
+pdf_viewer_Linux = "default"
+pdf_viewer_Windows = "default"
 
 // Determine the operating system to choose the Windows or Linux built of the Python-executables
 // [https://stackoverflow.com/questions/4689240/detecting-the-platform-window-or-linux-by-groovy-grails]
