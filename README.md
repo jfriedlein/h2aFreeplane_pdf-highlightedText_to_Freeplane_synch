@@ -3,6 +3,8 @@ Freeplane script to organise highlighted text and notes from pdf files as Freepl
 
 # Currently in testing state! This will probably take up entire 2024 to be certain h2aFreeplane is reliable. When testing is done and the implementation is cleaned and documented, an official "Release" will be available.
 # Testing status (14.02.2024): ~240 pdfs, ~7000 annotations
+# Testing status (28.03.2024): ~320 pdfs, ~8000 annotations
+# Testing status (28.05.2024): ~390 pdfs, ~10000 annotations
 
 
 ## What it does
