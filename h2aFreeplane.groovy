@@ -209,8 +209,12 @@ try
      }
 
 	// Get the path to the PDF
-	path_to_pdf = node_with_pdf.link.file.toString()
+	 path_to_pdf = node_with_pdf.link.file.toString()
 	
+	// @todo We could/should check whether the pdf-file actually exists at this point, but this is automatically 
+    //  checked by the Python script below. The Python script crashes if the pdf file does not exist, 
+    //  which is catched below and "return false" is done
+
 	path_file_output = path_to_h2a_tmp_directory + File.separator + filename_h2a_pdf_output
 	
 	if ( operatingSystem == "Linux" )
@@ -232,9 +236,17 @@ try
 	proc.consumeProcessErrorStream(b)
 	println proc.text
 	println b.toString()
+
+    // If b.toString() contains something, an error occured during the execution of the Python script. It 
+    //  is important that we catch this here and "return false" or else the script might continue to run.
 	if ( b.toString() )
 	{
-		ui.errorMessage("h2aFreeplane<< "+b.toString() )
+		println b.toString()
+		message_text =  'h2aFreeplane<< Failed during execution of Python script.'
+		c.statusInfo = message_text
+		logger.severe(message_text + ' : ' +  b.toString()) 
+		ui.errorMessage( message_text + ' : ' + b.toString() )
+        return false
 	}
 }
 catch (Exception e)
@@ -627,9 +639,9 @@ try
 
 	if ( operatingSystem == "Linux" )
 	{
-        	command2 = ["bash","-c",'"'+path_to_h2a_update_from_Freeplane +'" "'+ path_file_changes+'"']
+		command2 = ["bash","-c",'"'+path_to_h2a_update_from_Freeplane +'" "'+ path_file_changes+'"']
 	}	
-else if ( operatingSystem ==  "Windows" )
+	else if ( operatingSystem ==  "Windows" )
 	{
 		command2 = "\""+path_to_h2a_update_from_Freeplane.replace("\\","/")+"\" "+path_file_changes.replace(" ","%20").replace("\\","/")
 	}
@@ -639,14 +651,41 @@ else if ( operatingSystem ==  "Windows" )
 	// Execute h2a_update_from_Freeplane thereby waiting for its full completion
 	def proc2 = command2.execute()
 	
-    	def b2 = new StringBuffer()
-    	proc2.consumeProcessErrorStream(b2)
-    	println proc2.text
-        println b2.toString()
+	def b2 = new StringBuffer()
+	proc2.consumeProcessErrorStream(b2)
+	println proc2.text
+    println b2.toString()
+
 	if ( b2.toString() )
 	{
-		ui.errorMessage("h2aFreeplane<< "+b2.toString() )
+		println b2.toString()
+		message_text = 'h2aFreeplane<< Failed during execution of Python script h2a_update_from_Freeplane.'
+		c.statusInfo = message_text
+		logger.severe(message_text + ' : ' +  b2.toString()) 
+		ui.errorMessage( message_text + ' : ' + b2.toString() )
+        return false
 	}
+
+    // @todo Create or modify an extended user attribute for the pdf file to store e.g. that and when it was last processed by h2a
+
+    // Change the pdf icon to mark processed pdfs
+    //commandIcon = ["bash","-c",'gio set -t '+"'"+'string'+"'"+' "'+path_to_pdf +'" '+"'"+'metadata::custom-icon'+"'"+' "file://'+path_to_this_folder+'/docu/h2aFreeplane_icon.svg"']
+	
+    //ui.errorMessage("h2aFreeplane<< "+commandIcon.toString() )
+
+    //def procIcon = commandIcon.execute()
+	
+	//def bIcon = new StringBuffer()
+	//procIcon.consumeProcessErrorStream(bIcon)
+	//println procIcon.text
+    //println bIcon.toString()
+
+	//if ( bIcon.toString() )
+	//{
+	//	ui.errorMessage("h2aFreeplane<< "+bIcon.toString() )
+	//}
+
+
     
     // Get the current time to show it in the last statusInfo, so the user can see that the script started and finished and when this script finished last
      Date date_finished = new Date()
