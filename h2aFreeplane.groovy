@@ -227,7 +227,7 @@ try
 		//command = "python \"/Z:/5. Promotion_WD/commonFiles/PDF_save_highlighted_text_into_annotation/h2a_pdf-highlightedText_to_annotation/h2aFreeplane_caller.py\" "+path_to_pdf.replace(" ","%20").replace("\\","/")+" "+path_file_output.replace(" ","%20").replace("\\","/")
 	}
 
-	if ( debugging >= 1 ) { println "h2a-caller command=" + command }
+	if ( debugging >= 1 ) { println "h2aFreeplane<< h2a-caller command=" + command }
 	
 	// Execute the h2a-caller thereby waiting for its full completion
 	def proc = command.execute()
@@ -299,7 +299,7 @@ try
 	   // Read each line, so each annotation
 	    line ->
 	   
-       if ( debugging >= 4 ) { println "line="+line}
+       if ( debugging >= 4 ) { println "h2aFreeplane<< line="+line}
 	   // Each line contains an annotation, the information is grouped into a single string (see "h2a_highlightedText_to_annotation.py")
 	    line_split = line.split( ES )
 	    annot_text = line_split[0].replace( line_break_replacer, '\n' )
@@ -314,14 +314,14 @@ try
 	   //       so we need to append the page-number to make it PDF-unique.
 	    list_of_annotIDs_in_pdf.add( annot_ID+" on page "+annot_page )
 	   
-	   if ( debugging >= 2 ) { println "annot_ID="+annot_ID+" ; annot_text="+annot_text +" ; annot_time="+annot_time}
+	   if ( debugging >= 2 ) { println "h2aFreeplane<< annot_ID="+annot_ID+" ; annot_text="+annot_text +" ; annot_time="+annot_time}
 	   
 	   // Search for a child node that matches the current annotation ID "annot_ID"
 	    annot_ID_Found = false
 
        if ( debugging >= 2 )
        {
-           println "node_children123="
+           println "h2aFreeplane<< node_children123="
            println node_children123
        }
         
@@ -335,7 +335,7 @@ try
 	        node_annot_ID = child["annot_ID"].toString()
 	        node_annot_page = child["annot_page"]
 
-	       if ( debugging >= 3 ) { println "child="+child+" ; annot_ID="+node_annot_ID+" ; on annot_page="+node_annot_page }
+	       if ( debugging >= 3 ) { println "h2aFreeplane<< child="+child+" ; annot_ID="+node_annot_ID+" ; on annot_page="+node_annot_page }
 
            // We search for the annotation by its ID and by the page. Usually the ID should be unique in the PDF,
            //  but if the ID was created by PyMuPDF then the ID is only page-unique, so unique on this page (which is useless),
@@ -366,7 +366,7 @@ try
 	           // Extract the time when the annotation in this node was last modified in the PDF
 	            node_annot_time = child["annot_modTime_PDF"].toString()
 	           
-	           if ( debugging >= 3 ) { println "time: pdf="+annot_time+" vs node="+node_annot_time }
+	           if ( debugging >= 3 ) { println "h2aFreeplane<< time: pdf="+annot_time+" vs node="+node_annot_time }
 
 	           // If the annot pdf time is unchanged, the pdf-output contains no new content -> skip
 	           // @note Here it is still possible that the annotation was changed in Freeplane manually, so this check does not mean that the annotation is unchanged, but merely that no change results from the PDF
@@ -374,7 +374,7 @@ try
 	            if ( annot_time.equals( node_annot_time ) )
 	            {
     	           // State: The annotation already exists and it did not change in the PDF
-	               println "Found annotation, but unchanged in pdf"
+	               println "h2aFreeplane<< Found annotation, but unchanged in pdf"
 	               annot_ID_Found = true
 	               return true // break the node_children123.any, because we are done with this annot_ID
 	            }
@@ -384,7 +384,7 @@ try
 	                node_lastModified = child.lastModifiedAt.toString()
 	                node_annot_time_Freeplane = child["annot_modTime_Freeplane"].toString()
 	                
-	               if ( debugging >= 3 ) { println "time: node last mod="+node_lastModified+" vs node_time_Freeplane="+node_annot_time_Freeplane }
+	               if ( debugging >= 3 ) { println "h2aFreeplane<< time: node last mod="+node_lastModified+" vs node_time_Freeplane="+node_annot_time_Freeplane }
 	                
 	               node_lastModified = child.lastModifiedAt
 	               
@@ -392,7 +392,7 @@ try
 	                if ( node_lastModified.toString().equals(node_annot_time_Freeplane) )
 	                {
 	                    // State: The annotation already exists, it changed in the pdf, but it did not change in Freeplane
-	                    println "Found annotation, changed in pdf"
+	                    println "h2aFreeplane<< Found annotation, changed in pdf"
 	                    // Action: Read the newer text from the pdf
 	                    child.text = annot_text
 	                    child["annot_modTime_PDF"] = annot_time
@@ -402,7 +402,7 @@ try
 	                else
 	                {
 	                    // State: The annotation already exists, it changed in the pdf and it changed in Freeplane
-	                    println "Found annotation, changed in pdf and freeplane"
+	                    println "h2aFreeplane<< Found annotation, changed in pdf and freeplane"
 	                    // Action: Which one to take?
 	                    // @todo Which one to take? But show ui.message with selection/merge
 
@@ -438,7 +438,7 @@ try
 	    {
     	  	if ( debugging >= 1 ) 
             {
-                println "list="
+                println "h2aFreeplane<< list="
                 println list_of_all_annotIDs
             }
     	   // To make sure that this missing annot_ID was not deleted by the user previously, we check whether it has been previously imported
@@ -448,7 +448,7 @@ try
     	    {
         	    // State: The list of all previously imported annotations is empty, or it does not contain the currently processed annotation
 		    // @ACTION: Freshly create a node that relates to this annotation
-    	        println "annot_ID not found"
+    	        println "h2aFreeplane<< annot_ID not found"
     	        
     	        // Create a new child that is associated with the annotation
     	         child = node_with_pdf.createChild(annot_text)
@@ -466,7 +466,7 @@ try
 
             	   if ( debugging >= 2 )
             	   {
-                        println "after setting attributes: annot_time="+ annot_time
+                        println "h2aFreeplane<< after setting attributes: annot_time="+ annot_time
             	   }
 
                 // Append the freshly added annotation to the list of imported annotation
@@ -474,7 +474,7 @@ try
         	     
            	    if ( debugging >= 1 ) 
                 {
-            	    println "list_of_all_entries after="
+            	    println "h2aFreeplane<< list_of_all_entries after="
                     println list_of_all_entries
                 }
 	        }
@@ -561,7 +561,7 @@ try
 	 String timePart = date.format("HHmmss")
 	 String time_current_pdfFormat = "D:" + datePart + timePart + "+01'00"
 	
-	println "time_current_pdfFormat="+time_current_pdfFormat
+	println "h2aFreeplane<< time_current_pdfFormat="+time_current_pdfFormat
 	
 	new File( path_to_h2a_tmp_directory + File.separator + filename_h2a_freeplane_changes ).withWriter("UTF-8")
 	{
@@ -589,8 +589,8 @@ try
     	     {
         	    if ( debugging >= 1 )
         	    {
-        	        println "change of '"+child.text+"'"
-        	        println "last mod="+node_lastModified+"; modTime_FP="+modTime_freeplane
+        	        println "h2aFreeplane<< change of '"+child.text+"'"
+        	        println "h2aFreeplane<< last mod="+node_lastModified+"; modTime_FP="+modTime_freeplane
     	        }
     	        
     	        // Apply a dummy modification to update lastModified
@@ -646,7 +646,7 @@ try
 		command2 = "\""+path_to_h2a_update_from_Freeplane.replace("\\","/")+"\" "+path_file_changes.replace(" ","%20").replace("\\","/")
 	}
 
-	if ( debugging >= 1 ) { println "h2a-update from Freeplane command=" + command2 }
+	if ( debugging >= 1 ) { println "h2aFreeplane<< h2a-update from Freeplane command=" + command2 }
 	
 	// Execute h2a_update_from_Freeplane thereby waiting for its full completion
 	def proc2 = command2.execute()
