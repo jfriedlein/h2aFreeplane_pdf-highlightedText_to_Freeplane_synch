@@ -5,7 +5,7 @@ Freeplane script to organise highlighted text and notes from pdf files as Freepl
 # Testing status (14.02.2024): ~240 pdfs, ~7000 annotations
 # Testing status (28.03.2024): ~320 pdfs, ~8000 annotations
 # Testing status (28.05.2024): ~390 pdfs, ~10000 annotations
-
+# Testing status (14.06.2024): ~500 pdfs, ~11000 annotations
 
 ## What it does
 Starting from pdf-files of publications, books, etc. with highlighted text and notes, the Freeplane groovy script, with help of Python executables, extracts highlighted texts and notes from the pdf and enters it as nodes into Freeplane. The nodes in Freeplane can automatically be synchronised with the PDF, so all changes done in Freeplane to the annotations are written back into the PDF and vice versa. This is similar to the PDF handling capabilities of Docear.
@@ -64,10 +64,10 @@ todo add image, etc.
 - Enables making changes to the annotation content in Freeplane and writing these changes back into the original PDF to keep the PDF and Freeplane synchronised
 - Deleting an annotation in the PDF will delete the annotation node in Freeplane
 - Deleting an annotation node in Freeplane will not delete the annotation in the pdf (by design, could be changed if desired), but stops h2aFreeplane from again importing the annotation (will not appear in Freeplane again). To undo such a partly deleted annotation, remove the line that belongs to this annotation from the note of the parent pdf node, this will make h2aFreeplane import the annotation again.
-- You can rearrange the annotations, group them, add annotations nodes as children to annotations nodes and add non-annoation nodes (standard Freeplane nodes). Currently only three levels of children are supported (can be extended in the groovy script).
+- You can rearrange the annotations, group them, add annotations nodes as children to annotations nodes and add non-annotation nodes (standard Freeplane nodes). Currently only three levels of children are supported (can be extended in the groovy script).
 
 ## Python executables
-Reading and writing of the pdf annotation is based on Python (fitz, pymupdf). However, due to prebuild executables your PC does not need to have Python or any module installed to be able to run h2aFreeplane. Currently the Python-executables are only prebuilt for Windows and Linux, but it should easily be possible to build them e.g. for Mac (using auto-py-to-exe). In case there are some security considerations or your antivirus software does not like the Python executables, you can also easily build the Python executables by yourself (using Python3, fitz, auto-py-to-exe and the Python source code from https://github.com/jfriedlein/h2a_pdf-highlightedText_to_annotation building the files h2aFreeplane_caller.py, h2a_update_from_Freeplane_caller.py both with the folder h2a_functions).
+Reading and writing of the pdf annotation is based on Python (fitz, pymupdf). However, due to pre-built executables your PC does not need to have Python or any module installed to be able to run h2aFreeplane. Currently the Python-executables are only pre-built for Windows and Linux, but it should easily be possible to build them e.g. for Mac (using auto-py-to-exe). In case there are some security considerations or your antivirus software does not like the Python executables, you can also easily build the Python executables by yourself (using Python3, fitz, auto-py-to-exe and the Python source code from https://github.com/jfriedlein/h2a_pdf-highlightedText_to_annotation building the files h2aFreeplane_caller.py, h2a_update_from_Freeplane_caller.py both with the folder h2a_functions).
 
 ## Docear
 Docear (https://docear.org/) is a fantastic system, which might has been born to early to truly thrive. Unfortunately, it nowadays appears outdated, unsupported, and somewhat buggy/error-prone (as of 2024). h2aFreeplane opts to revive the pdf handling capabilities of Docear bringing it into the current decade and trying to avoid some of its original shortcomings. We try to achieve this by:
@@ -84,3 +84,6 @@ Docear (https://docear.org/) is a fantastic system, which might has been born to
 - When hovering over the nodes the attributes and notes pop-up. This can be distracting, but is a Freeplane settings. Can this be deactivated?
 - Currently hardcoded to timezone Europe/Berlin
 - Check different timezone formats such as SumatraPDF "...Z" instead of "+1'00"
+- Currently only file ending ".pdf" is detected, not ".PDF", maybe use ".toLowerCase()" in all those places
+
+
