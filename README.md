@@ -8,9 +8,14 @@ Freeplane script to organise highlighted text and notes from pdf files as Freepl
 # Testing status (14.06.2024): ~500 pdfs, ~11000 annotations
 
 ## What it does
-Starting from pdf-files of publications, books, etc. with highlighted text and notes, the Freeplane groovy script, with help of Python executables, extracts highlighted texts and notes from the pdf and enters it as nodes into Freeplane. The nodes in Freeplane can automatically be synchronised with the PDF, so all changes done in Freeplane to the annotations are written back into the PDF and vice versa. This is similar to the PDF handling capabilities of Docear.
+Starting from pdf-files of publications, books, etc. with highlighted text and notes, the Freeplane groovy script, with help of Python executables, extracts highlighted texts and notes from the pdf and enters it as nodes into Freeplane. The nodes in Freeplane can automatically be synchronised with the PDF, so all changes done in Freeplane to the annotations are written back into the PDF and vice versa. This is similar to the PDF handling capabilities of [Docear](https://www.youtube.com/watch?v=yDAfcSHxjbM).
 
 <img src="https://github.com/jfriedlein/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch/blob/main/docu/h2aFreeplane%20-%20overview.png" width=75% height=75%>
+
+## Why use h2aFreeplane? Why organise pdf highlights and annotations as mindmap?
+Whether h2aFreeplane is an asset to your toolbox depends on your working style. I tend to read many publications as pdf, thereby highlighting text that is important or contains key phrases or valuable information, and adding pop-up notes with ideas/questions/todos. Thereby, one collects a vast amount of information, which is however spread over hundreds of pdfs. If you remember having read something, the chances are high you won't find it again. Even searching the internet might let you down as it does not know what pdfs you have read and sometimes the pdf's underlying text content is not searchable or quite messed up.
+Here mindmaps come into play as they are able to collect a vast amount of information, make the data groupable, let you collapse/hide parts, and are fully searchable (searching extracted pdf annotations is much faster than searching the entire text content of pdfs). However, if you collect the data manually, it is a lot of work and almost impossible to maintain/synchronise the mindmap and the pdfs.
+h2aFreeplane resolves all of these issues.
 
 ## Installation and setup
 1. Install the mindmapping software Freeplane (https://docs.freeplane.org/)
