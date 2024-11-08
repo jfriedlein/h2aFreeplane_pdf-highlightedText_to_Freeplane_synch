@@ -20,6 +20,11 @@ URI sourceUri
 Path scriptLocation = Paths.get(sourceUri)
 path_to_this_folder = scriptLocation.getParent().toString();
 
+// First part of the paths to main literature folder that are different for Linux and Windows
+// @note Without the leading "file:"
+path_to_lit_folder_Linux = "/media/xxx/WUSB/"
+path_to_lit_folder_Windows= "/W:/"
+
 // Determine the operating system to choose the Windows or Linux built of the Python-executables
 // [https://stackoverflow.com/questions/4689240/detecting-the-platform-window-or-linux-by-groovy-grails]
 operatingSystem_tmp = System.properties['os.name'].toLowerCase()
@@ -211,6 +216,47 @@ try
 	// Get the path to the PDF
 	 path_to_pdf = node_with_pdf.link.file.toString()
 	
+    // Adapt the path depending on the current PC
+    // @todo This gives a nice standalone function to be used in different scripts (make standalone and callable)
+     if ( operatingSystem=="Linux" )
+     {
+        // Check if the path contains the correct path to the Linux folder as the detected operating system is Linux
+        if ( path_to_pdf.indexOf(path_to_lit_folder_Linux) == 0 )
+        {
+            // STATE: Operating system is Linux and path contains Linux folder
+        }
+        else if ( path_to_pdf.indexOf(path_to_lit_folder_Windows) == 0 )
+        {
+            // STATE: Operating system is Linux but path contains Windows folder
+            // ACTION: Replace the Windows part of the path with the Linux part
+             path_to_pdf = path_to_pdf.replace( path_to_lit_folder_Windows, path_to_lit_folder_Linux )
+        }
+        else
+        {
+		    // STATE: Cannot find any known path phrase
+            // ACTION: Do nothing, show no error, do not log
+        }
+     }
+     else if ( operatingSystem=="Windows" )
+     {
+        // Check if the path contains the correct path to the Windows folder as the detected operating system is Windows
+        if ( path_to_pdf.indexOf(path_to_lit_folder_Windows) == 0 )
+        {
+            // STATE: Operating system is Windows and path contains Windows folder
+        }
+        else if ( path_to_pdf.indexOf(path_to_lit_folder_Linux) == 0 )
+        {
+            // STATE: Operating system is Windows but path contains Linux folder
+            // ACTION: Replace the Linux part of the path with the Windows part
+             path_to_pdf = path_to_pdf.replace( path_to_lit_folder_Linux, path_to_lit_folder_Windows )
+        }
+        else
+        {
+		    // STATE: Cannot find any known path phrase
+            // ACTION: Do nothing, show no error, do not log
+        }
+     }
+
 	// @todo We could/should check whether the pdf-file actually exists at this point, but this is automatically 
     //  checked by the Python script below. The Python script crashes if the pdf file does not exist, 
     //  which is catched below and "return false" is done
@@ -568,7 +614,7 @@ try
     	writer ->
     	
     	// Write the path to the PDF into the first line of the output-file. This is read by h2a_update_from_freeplane.py to load and modify the PDF.
-	     writer.writeLine( node_with_pdf.link.file.toString() )
+	     writer.writeLine( path_to_pdf )
 
 	    // Collect children, grandchildren, and grand-grandchildren
 	    // @todo-optimize Should be similar to above, besides the freshly created nodes
