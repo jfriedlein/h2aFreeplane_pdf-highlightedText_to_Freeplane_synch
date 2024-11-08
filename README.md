@@ -3,9 +3,8 @@ Freeplane script to organise highlighted text and notes from pdf files as Freepl
 
 # Currently in testing state! This will probably take up entire 2024 to be certain h2aFreeplane is reliable. When testing is done and the implementation is cleaned and documented, an official "Release" will be available.
 # Testing status (14.02.2024): ~240 pdfs, ~7000 annotations
-# Testing status (28.03.2024): ~320 pdfs, ~8000 annotations
-# Testing status (28.05.2024): ~390 pdfs, ~10000 annotations
 # Testing status (14.06.2024): ~500 pdfs, ~11000 annotations
+# Testing status (08.11.2024): ~670 pdfs, ~15000 annotations
 
 ## What it does
 Starting from pdf-files of publications, books, etc. with highlighted text and notes, the Freeplane groovy script, with help of Python executables, extracts highlighted texts and notes from the pdf and enters it as nodes into Freeplane. The nodes in Freeplane can automatically be synchronised with the PDF, so all changes done in Freeplane to the annotations are written back into the PDF and vice versa. This is similar to the PDF handling capabilities of [Docear](https://www.youtube.com/watch?v=yDAfcSHxjbM).
@@ -17,8 +16,10 @@ Whether h2aFreeplane is an asset to your toolbox depends on your working style. 
 Here mindmaps come into play as they are able to collect a vast amount of information, make the data groupable, let you collapse/hide parts, and are fully searchable (searching extracted pdf annotations is much faster than searching the entire text content of pdfs). However, if you collect the data manually, it is a lot of work and almost impossible to maintain/synchronise the mindmap and the pdfs.
 h2aFreeplane resolves all of these issues.
 
+[Freeplane How-To](https://www.oldergeeks.com/downloads/files/freeplane-handbook-fullcircle-parts-1-15.pdf)
+
 ## Installation and setup
-1. Install the mindmapping software Freeplane (https://docs.freeplane.org/)
+1. Install the mindmapping software Freeplane (https://docs.freeplane.org/) (h2aFreeplane tested for 1.10.4 and 1.12.5 on Linux and xxx on Windows)
 2. Download the h2aFreeplane package (at the moment download this repository), unpack the folder somewhere on your hard drive, e.g. "~/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch"
 3. Adapt the Freeplane preferences under Tools->Preferences to allow automatic script execution (read and write permission are needed to create the tmp-files that transfer the information from Freeplane to the h2a-Python-executables and back, execution of external programs is needed to execute the h2a-Python-executables and start the pdf-viewer, it might be necessary to allow network operations if some file are located e.g. on a USB stick)
 
