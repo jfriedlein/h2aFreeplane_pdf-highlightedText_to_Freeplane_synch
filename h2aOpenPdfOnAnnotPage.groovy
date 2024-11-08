@@ -5,8 +5,13 @@
 // @note For Windows the paths to the pdf-viewer executables can contain blank spaces but all backslashes "\" need to be replaced by slashes "/" for the paths to work in Java
 
 // USER-Parameters
-pdf_viewer_Linux = "default"
-pdf_viewer_Windows = "default"
+pdf_viewer_Linux = "okular"
+pdf_viewer_Windows = "adobe"
+
+// First part of the paths to main literature folder that are different for Linux and Windows
+// @note Without the leading "file:"
+path_to_lit_folder_Linux = "/media/xxx/WUSB/"
+path_to_lit_folder_Windows= "/W:/"
 
 // Determine the operating system to choose the Windows or Linux built of the Python-executables
 // [https://stackoverflow.com/questions/4689240/detecting-the-platform-window-or-linux-by-groovy-grails]
@@ -70,6 +75,47 @@ try
     // Extract path to the PDF from the node_with_pdf node
      path_to_pdf = node_with_pdf.link.file.toString().replace("%20"," ")
 	
+    // Adapt the path depending on the current PC
+    // @todo This gives a nice standalone function to be used in different scripts (make standalone and callable)
+     if ( operatingSystem=="Linux" )
+     {
+        // Check if the path contains the correct path to the Linux folder as the detected operating system is Linux
+        if ( path_to_pdf.indexOf(path_to_lit_folder_Linux) == 0 )
+        {
+            // STATE: Operating system is Linux and path contains Linux folder
+        }
+        else if ( path_to_pdf.indexOf(path_to_lit_folder_Windows) == 0 )
+        {
+            // STATE: Operating system is Linux but path contains Windows folder
+            // ACTION: Replace the Windows part of the path with the Linux part
+             path_to_pdf = path_to_pdf.replace( path_to_lit_folder_Windows, path_to_lit_folder_Linux )
+        }
+        else
+        {
+		    // STATE: Cannot find any known path phrase
+            // ACTION: Do nothing, show no error, do not log
+        }
+     }
+     else if ( operatingSystem=="Windows" )
+     {
+        // Check if the path contains the correct path to the Windows folder as the detected operating system is Windows
+        if ( path_to_pdf.indexOf(path_to_lit_folder_Windows) == 0 )
+        {
+            // STATE: Operating system is Windows and path contains Windows folder
+        }
+        else if ( path_to_pdf.indexOf(path_to_lit_folder_Linux) == 0 )
+        {
+            // STATE: Operating system is Windows but path contains Linux folder
+            // ACTION: Replace the Linux part of the path with the Windows part
+             path_to_pdf = path_to_pdf.replace( path_to_lit_folder_Linux, path_to_lit_folder_Windows )
+        }
+        else
+        {
+		    // STATE: Cannot find any known path phrase
+            // ACTION: Do nothing, show no error, do not log
+        }
+     }
+
 	// Set the page number on which the PDF shall be opened
 	 if ( node["annot_page"] )
 	 {
@@ -125,6 +171,7 @@ try
     }
     else if ( operatingSystem=="Windows" )
     {
+        // @note Do not use "\" in the paths, use "/" instead
         switch ( pdf_viewer_Windows )
         {
             case "adobe": // [https://stackoverflow.com/questions/619158/adobe-reader-command-line-reference]
