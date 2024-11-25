@@ -22,8 +22,8 @@ path_to_this_folder = scriptLocation.getParent().toString();
 
 // First part of the paths to main literature folder that are different for Linux and Windows
 // @note Without the leading "file:"
-path_to_lit_folder_Linux = "/media/xxx/WUSB/"
-path_to_lit_folder_Windows= "/W:/"
+ path_to_lit_folder_Linux = "/media/iwtm41_lokal/WUSB/"
+ path_to_lit_folder_Windows = "/W:/"
 
 // Determine the operating system to choose the Windows or Linux built of the Python-executables
 // [https://stackoverflow.com/questions/4689240/detecting-the-platform-window-or-linux-by-groovy-grails]
@@ -61,6 +61,12 @@ ES = " ;x; "
 line_break_replacer = ' ;xnx; '
 
 error_phrase = ">ERROR>"
+
+sort_newly_added_annotationNodes_by_page = true
+
+color_newly_added_annotationNodes = true
+// Color used to mark newly added annotations
+ Color DARK_GREEN = new Color(0,102,0);
 
 // Choose a debugging level, that is active when use node scripts via println or in "log" files. 0=no debugging output, 1=first level of debugging outputs, 2=..., 99=all levels
  debugging = 0
@@ -381,6 +387,18 @@ try
 	        node_annot_ID = child["annot_ID"].toString()
 	        node_annot_page = child["annot_page"]
 
+           if ( color_newly_added_annotationNodes )
+           {
+               // Reset the font colour from green (marked new annotations) back to default (black), but only if error status is "ok" ("error" use text colour red)
+               // @Note (@BUGfix) Changing the font color here is seen as modification of the node as if its content was changed. Therefore, a change in the pdf of this annotation will result in conflicting changes (change in pdf and in freeplane), even though the content of the annotation was not changed in freeplane. Therefore, the actual "lastModifiedAt" time is stored, then the text color is changed, and then the old/actual modification is written over the falsely changed lastModifiedAt time
+                if ( child.style.getTextColor()==DARK_GREEN && child["annot_status"].contains("ok") )
+                {
+	                node_lastModified_tmp = child.lastModifiedAt
+                    child.style.setTextColor()
+                    child.lastModifiedAt = node_lastModified_tmp
+                }
+            }
+
 	       if ( debugging >= 3 ) { println "h2aFreeplane<< child="+child+" ; annot_ID="+node_annot_ID+" ; on annot_page="+node_annot_page }
 
            // We search for the annotation by its ID and by the page. Usually the ID should be unique in the PDF,
@@ -523,6 +541,40 @@ try
             	    println "h2aFreeplane<< list_of_all_entries after="
                     println list_of_all_entries
                 }
+
+                if ( sort_newly_added_annotationNodes_by_page )
+                {
+        	        // Shift the node upwards until its annot_page fits to the annot_page of the node above
+                    // @todo Put this into a function and make it callable depending on user-parameter (together with the above reset of dark_green
+	                 // Collect node_children1 for sorting (repetitive code findChildrenGenerations)
+                     // @note This must be done before every attempt to use "moveTo", because by "createChild" the list changes, therefore the indices change
+	                  def node_children1 = []
+	                  node_with_pdf.children.each
+	                  {
+	                    child1 ->
+	                    if ( child1["annot_ID"] )
+	                    {
+		                    node_children1 = node_children1 + child1
+	                    }
+	                  }
+                     // The counter starts at zero to be able to shift a node all the way to the top (index=0)
+                      counter_i = 0
+                      if ( color_newly_added_annotationNodes )
+                      {
+                        child.style.setTextColor(DARK_GREEN)
+                      }
+        	          node_children1.find
+                      {
+                        child1 ->
+                        if ( child1["annot_page"] && (child1["annot_page"].toInteger() > annot_page.toInteger()) )
+                        {
+                            child.moveTo( node_with_pdf, counter_i )
+                            return true
+                        }
+                        counter_i = counter_i + 1
+                        return false
+                      }
+                } // end if (sort_newly_added_annotationNodes_by_page)
 	        }
     	    else
     	    {
@@ -552,7 +604,7 @@ try
 
       counter_failedToDelete = 0
       list_of_failed_annots = []
-      // For some reason the .each will process a null element when the list is empty, therefore the two null checks where added
+      // For some reason the .each will process a null element when the list is empty, therefore the two null checks were added
 	  list_of_annots_in_Freeplane_but_not_in_pdf.each
 	  {
           annot_ID_toBeDeleted ->
@@ -561,7 +613,7 @@ try
 	 	   node_children123_updated.any
 	       {
     	       child ->
-    	       if ( child["annot_ID"] && child["annot_page"] && (child["annot_ID"]+" on page "+child["annot_page"]).equals(annot_ID_toBeDeleted) )
+    	       if ( child["annot_ID"] && child["annot_page"] && ( child["annot_ID"]+" on page "+child["annot_page"] ).equals(annot_ID_toBeDeleted) )
     	       {
         	       child.delete()
         	       //ui.informationMessage("deleted "+annot_ID_toBeDeleted+ " vs "+child["annot_ID"])
