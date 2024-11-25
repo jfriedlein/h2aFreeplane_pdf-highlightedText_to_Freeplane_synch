@@ -22,7 +22,7 @@ path_to_this_folder = scriptLocation.getParent().toString();
 
 // First part of the paths to main literature folder that are different for Linux and Windows
 // @note Without the leading "file:"
- path_to_lit_folder_Linux = "/media/iwtm41_lokal/WUSB/"
+ path_to_lit_folder_Linux = "/media/xxx/WUSB/"
  path_to_lit_folder_Windows = "/W:/"
 
 // Determine the operating system to choose the Windows or Linux built of the Python-executables
