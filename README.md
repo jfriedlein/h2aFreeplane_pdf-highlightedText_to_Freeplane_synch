@@ -18,14 +18,14 @@ h2aFreeplane resolves all of these issues.
 
 ## Installation and setup
 ### Using Freeplane addon "h2aFreeplane-v2.0.addon.mm"
-1. Install the mindmapping software Freeplane (https://docs.freeplane.org/) (ideally most recent version 1.12.8 or newer (tested for Linux 1.12.5 and Windows 1.12.8), for older versions see [section below ](#using-freeplane-scripts))
-2. Download the Freeplane addon "h2aFreeplane-v2.0.addon.mm" and save it somewhere on your PC
+1. Install the mindmapping software Freeplane (https://docs.freeplane.org/) (ideally most recent version 1.12.8 or newer (tested for Linux 1.12.5 and Windows 1.12.8), for older versions see [section below](#using-freeplane-scripts))
+2. Download the Freeplane addon "h2aFreeplane-v2.0.addon.mm" (see releases) and save it somewhere on your PC
 3. Install the addon (Procedure: [Freeplane Addons](https://docs.freeplane.org/getting-started/Add-ons_(install).html))
     - In Freeplane, select Tools -> Add-ons -> Search and install -> Install add-on from a known location -> Search: select the file "h2aFreeplane-v2.0.addon.mm" from where you saved it
     - Click on "Install" (it might take 30 seconds until any message box pops up, because the prebuilt Python executables are about 100 MB large and need to be unpacked)
-    - If the installation was successful, restart Freeplane. If the installation failed, see end of this section)
+    - If the installation was successful, restart Freeplane. If the installation failed, see [section below](#using-freeplane-scripts))
 4. After successful installation and restart (might be necessary to restart twice to resolve "Permission denied" error message), you should see Tools -> h2aFreeplane -> h2aFreeplane
-5. You can assign hotkeys to the execution of both scripts. I prefer "alt+h" for exeuction of "H2a Freeplane", and "alt+p" for execution of "H2a Open Pdf on Annot Page"
+5. You can assign hotkeys to the execution of both scripts. I prefer "alt+h" for execution of "H2a Freeplane", and "alt+p" for execution of "H2a Open Pdf on Annot Page"
 6. To hide the attributes and attribute symbols for the annotation nodes: View->Node attributes->"Hide all attributes" and turn off "Show icon for attributes"
 
 Note: What does "h2aFreeplane-v2.0.addon.mm" install, where, and why
@@ -33,7 +33,7 @@ Note: What does "h2aFreeplane-v2.0.addon.mm" install, where, and why
 - In the folder "addons", you find "h2aFreeplane" with subfolder "scripts".
     - Therein "h2aFreeplane.groovy" is the main script that creates the mindmap nodes, calls the Python executables, etc.
     - The folders "h2aFreeplane_Python-...-executables" contain the prebuilt Python executables "h2aFreeplane_caller" and "h2a_update_from_Freeplane_caller" (with needed packages) for Windows and Linux
-- In the folder "lib", the utility script "H2A_utilityScripts.groovy" is located. It contains common function that are used in "h2aFreeplane.groovy" and "h2aOpenPdfOnAnnotPage.groovy"
+- In the folder "lib" (not the subfolder, but the main folder on the same level as folder "addons"), the utility script "H2A_utilityScripts.groovy" is located. It contains common function that are used in "h2aFreeplane.groovy" and "h2aOpenPdfOnAnnotPage.groovy"
     - It is located in the default script classpath for "lib".
 - In the folder "scripts", "h2aOpenPdfOnAnnotPage.groovy" is located, which enables to open the pdf from an annotation node in the mindmap and directly jump to the page that contains this annotation
     - It is located in the default script search path to automatically add it to Tools -> Scripts -> "H2A Open Pdf On Annot page". Thereby it can be run from "child.link.text" via "menuitem" to start it by clicking the gray box in front of each annotation node.
@@ -52,7 +52,7 @@ In case the addon installation does not work, you want to install the addon file
 
 <img src="https://github.com/jfriedlein/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch/blob/main/docu/Freeplane%20with%20successfully%20loaded%20h2aFreeplane%20scripts.png" width=50% height=50%>
 
-9. You can assign hotkeys to the execution of both scripts. I prefer "alt+h" for exeuction of "H2a Freeplane", and "alt+p" for execution of "H2a Open Pdf on Annot Page"
+9. You can assign hotkeys to the execution of both scripts. I prefer "alt+h" for execution of "H2a Freeplane", and "alt+p" for execution of "H2a Open Pdf on Annot Page"
 10. To hide the attributes and attribute symbols for the annotation nodes: View->Node attributes->"Hide all attributes" and turn off "Show icon for attributes"
 
 
@@ -61,9 +61,9 @@ Exemplary pdf with highlighted text:
 
 <img src="https://github.com/jfriedlein/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch/blob/main/docu/Exemplary%20pdf.png" width=50% height=50%>
 
-1. Drag&Drop (holding ctrl+shift to get a link to the pdf, not a file copy) a pdf file into your mindmap.
+1. Drag&Drop (holding ctrl+shift to get a link to the pdf, not a file copy) or copy-paste a pdf file into your mindmap.
 2. Execute the script "H2a Freeplane" (e.g. by hotkey "alt+h"). Running the script for the first time might take several seconds, because it appears to be compiled. When you run a script for the first time, a warning may appear as script execution can be a security concern. If in question, look through the code or execute it partially.
-3. Now the mindmap should list all annotations as child nodes to the pdf-file and the content field of each annotation in the pdf should contain the extracted content.
+3. Now the mindmap should list all annotations as child nodes to the pdf-file and the content field of each annotation in the pdf should contain the extracted content. (In v2.0 freshly added annotations are coloured green until they are not new anymore. This option and the colour can be configured in "h2aFreeplane.groovy".)
 
 <img src="https://github.com/jfriedlein/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch/blob/main/docu/Exemplary%20pdf%20with%20loaded%20annotations.png" width=50% height=50%>
 <img src="https://github.com/jfriedlein/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch/blob/main/docu/Exemplary%20pdf%20after%20first%20h2a.png" width=50% height=50%>
