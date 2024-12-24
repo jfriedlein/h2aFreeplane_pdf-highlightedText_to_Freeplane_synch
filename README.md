@@ -24,9 +24,9 @@ h2aFreeplane resolves all of these issues.
 1. Install the mindmapping software Freeplane (https://docs.freeplane.org/) (ideally most recent version 1.12.8 or newer (tested for Linux 1.12.5 and Windows 1.12.8), for older versions see [section below ](##using-freeplane-scripts))
 2. Download the Freeplane addon "h2aFreeplane-v2.0.addon.mm" and save it somewhere on your PC
 3. Install the addon (Procedure: [Freeplane Addons](https://docs.freeplane.org/getting-started/Add-ons_(install).html))
-3.1 In Freeplane, select Tools -> Add-ons -> Search and install -> Install add-on from a known location -> Search: select the file "h2aFreeplane-v2.0.addon.mm" from where you saved it
-3.2 Click on "Install" (it might take 30 seconds until any message box pops up, because the prebuilt Python executables are about 100 MB large and need to be unpacked)
-3.3 If the installation was successful, restart Freeplane. If the installation failed, see end of this section)
+    - In Freeplane, select Tools -> Add-ons -> Search and install -> Install add-on from a known location -> Search: select the file "h2aFreeplane-v2.0.addon.mm" from where you saved it
+    - Click on "Install" (it might take 30 seconds until any message box pops up, because the prebuilt Python executables are about 100 MB large and need to be unpacked)
+    - If the installation was successful, restart Freeplane. If the installation failed, see end of this section)
 4. After successful installation and restart (might be necessary to restart twice to resolve "Permission denied" error message), you should see Tools -> h2aFreeplane -> h2aFreeplane
 5. You can assign hotkeys to the execution of both scripts. I prefer "alt+h" for exeuction of "H2a Freeplane", and "alt+p" for execution of "H2a Open Pdf on Annot Page"
 6. To hide the attributes and attribute symbols for the annotation nodes: View->Node attributes->"Hide all attributes" and turn off "Show icon for attributes"
@@ -75,9 +75,9 @@ Exemplary pdf with highlighted text:
 <img src="https://github.com/jfriedlein/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch/blob/main/docu/Exemplary%20pdf%20with%20loaded%20annotations%20after%20some%20manual%20cleaning.png" width=50% height=50%>
 
 5. If you select one of the annotation nodes and execute the script "H2a Open Pdf on Annot Page" (e.g. by "alt+p" or clicking the button symbol at the front of an annotation node which needs to be selected), you can open the pdf directly jumping to the page where the selected annotation is located.
-5.1 Note that you will have to enter the paths to your desired pdf-viewer in the "h2aOpenPdfOnAnnotPage.groovy" script to be able to use it. By default, the script uses the default pdf viewer set on your PC to make sure the pdf can be opened. However, this default option does not support jumping to the annotation page. To enable this feature you can choose your desired pdf viewer and the paths and commands inside the h2aOpenPdfOnAnnotPage.groovy script. Please note that PDF viewers might protect the pdf file and block changes to it. Therefore, it might be necessary to close the pdf in the PDF viewer and then run h2a. Preferably use a PDF viewer without this "feature".
-5.2 As this is a script, you will need to allow the execution of scripts in Freeplane -> Tools -> Preferences -> Plugins
-5.3 As this script starts a PDF viewer, you will need to allow the execution of external programs in Freeplane -> Tools -> Preferences -> Plugins
+    - Note that you will have to enter the paths to your desired pdf-viewer in the "h2aOpenPdfOnAnnotPage.groovy" script to be able to use it. By default, the script uses the default pdf viewer set on your PC to make sure the pdf can be opened. However, this default option does not support jumping to the annotation page. To enable this feature you can choose your desired pdf viewer and the paths and commands inside the h2aOpenPdfOnAnnotPage.groovy script. Please note that PDF viewers might protect the pdf file and block changes to it. Therefore, it might be necessary to close the pdf in the PDF viewer and then run h2a. Preferably use a PDF viewer without this "feature".
+    - As this is a script, you will need to allow the execution of scripts in Freeplane -> Tools -> Preferences -> Plugins
+    - As this script starts a PDF viewer, you will need to allow the execution of external programs in Freeplane -> Tools -> Preferences -> Plugins
 
 <img src="https://github.com/jfriedlein/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch/blob/main/docu/Exemplary%20PDF%20after%20h2a%20and%20some%20manual%20cleaning.png" width=50% height=50%>
 
