@@ -1,7 +1,6 @@
 # h2aFreeplane_pdf-highlightedText_to_Freeplane_synch
-Freeplane script to organise highlighted text and notes from pdf files as Freeplane mindmap. This is very helpful to organise the information from many pdfs (usually spread and hidden in many annotations) as a mindmap, similar to Docear.
+Freeplane script to organise highlighted text and notes from pdf files as Freeplane mindmap. This is very helpful to organise the information from many pdfs (usually spread and hidden in many annotations) as a mindmap, similar to Docear. Available as Freeplane addon (see releases) or Freeplane scripts.
 
-# Testing status (24.12.2024): 777 pdfs, 17614 annotations
 
 ## What it does
 Starting from pdf-files of publications, books, etc. with highlighted text and notes, the Freeplane groovy script, with help of Python executables, extracts highlighted texts and notes from the pdf and enters it as nodes into Freeplane. The nodes in Freeplane can automatically be synchronised with the PDF, so all changes done in Freeplane to the annotations are written back into the PDF and vice versa. This is similar to the PDF handling capabilities of [Docear](https://www.youtube.com/watch?v=yDAfcSHxjbM).
@@ -122,4 +121,5 @@ Docear (https://docear.org/) is a fantastic system, which might has been born to
 - Currently only file ending ".pdf" is detected, not ".PDF", maybe use ".toLowerCase()" in all those places
 - Microsoft Edge: When changing the annotation text of an existing annotation, Edge does not change the modification time of the annotation, hence h2a cannot detect this change. Is this an Edge bug/feature?
 
+## Testing status (24.12.2024): 777 pdfs, 17614 annotations
 
