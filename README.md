@@ -1,10 +1,7 @@
 # h2aFreeplane_pdf-highlightedText_to_Freeplane_synch
 Freeplane script to organise highlighted text and notes from pdf files as Freeplane mindmap. This is very helpful to organise the information from many pdfs (usually spread and hidden in many annotations) as a mindmap, similar to Docear.
 
-# Currently in testing state! This will probably take up entire 2024 to be certain h2aFreeplane is reliable. When testing is done and the implementation is cleaned and documented, an official "Release" will be available.
-# Testing status (14.02.2024): ~240 pdfs, ~7000 annotations
-# Testing status (14.06.2024): ~500 pdfs, ~11000 annotations
-# Testing status (08.11.2024): ~670 pdfs, ~15000 annotations
+# Testing status (24.12.2024): 777 pdfs, 17614 annotations
 
 ## What it does
 Starting from pdf-files of publications, books, etc. with highlighted text and notes, the Freeplane groovy script, with help of Python executables, extracts highlighted texts and notes from the pdf and enters it as nodes into Freeplane. The nodes in Freeplane can automatically be synchronised with the PDF, so all changes done in Freeplane to the annotations are written back into the PDF and vice versa. This is similar to the PDF handling capabilities of [Docear](https://www.youtube.com/watch?v=yDAfcSHxjbM).
@@ -47,7 +44,7 @@ In case the addon installation does not work, you want to install the addon file
 1. Install the mindmapping software Freeplane (the Freeplane versions should be less problematic here, also tested for 1.10.4, 1.12.5)
 2. Download the h2aFreeplane package (this repository), unpack the folder somewhere on your hard drive, e.g. "~/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch"
 3. Adapt the Freeplane preferences under Tools -> Preferences to allow automatic script execution (read and write permission are needed to create the tmp-files that transfer the information from Freeplane to the h2a-Python-executables and back, execution of external programs is needed to execute the h2a-Python-executables and start the pdf-viewer, it might be necessary to allow network operations if some file are located e.g. on a USB stick)
-4. In the Freeplane preferences add the path to "~/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch/scripts" (for "h2aFreeplane.groovy") and "~/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch/zips/scripts" (for "h2aOpenPdfOnAnnotPage.groovy") to the "Script search path"
+4. In the Freeplane preferences add the path to "/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch/scripts" (for "h2aFreeplane.groovy") and "/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch/zips/scripts" (for "h2aOpenPdfOnAnnotPage.groovy") to the "Script search path"
 5. Open the file "h2aFreeplane.groovy" located in "~/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch/scripts". Set the variable "path_detour_for_local_tests" to "../zips/addons/h2aFreeplane/scripts/". Save the script and close it.
 6. Add the path to "H2A_utilityScripts.groovy" located in the subdirectory "zips/lib" to "Script classpath", e.g. "~/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch/zips/lib"
 7. Restart Freeplane to let it load the scripts.
