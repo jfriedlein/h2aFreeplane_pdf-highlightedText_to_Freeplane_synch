@@ -18,21 +18,46 @@ h2aFreeplane resolves all of these issues.
 
 [Freeplane How-To](https://www.oldergeeks.com/downloads/files/freeplane-handbook-fullcircle-parts-1-15.pdf)
 
+
 ## Installation and setup
-1. Install the mindmapping software Freeplane (https://docs.freeplane.org/) (h2aFreeplane tested for 1.10.4 and 1.12.5 on Linux and xxx on Windows)
-2. Download the h2aFreeplane package (at the moment download this repository), unpack the folder somewhere on your hard drive, e.g. "~/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch"
-3. Adapt the Freeplane preferences under Tools->Preferences to allow automatic script execution (read and write permission are needed to create the tmp-files that transfer the information from Freeplane to the h2a-Python-executables and back, execution of external programs is needed to execute the h2a-Python-executables and start the pdf-viewer, it might be necessary to allow network operations if some file are located e.g. on a USB stick)
+### Using Freeplane addon "h2aFreeplane-v2.0.addon.mm"
+1. Install the mindmapping software Freeplane (https://docs.freeplane.org/) (ideally most recent version 1.12.8 or newer (tested for Linux 1.12.5 and Windows 1.12.8), for older versions see [section below ](##using-freeplane-scripts))
+2. Download the Freeplane addon "h2aFreeplane-v2.0.addon.mm" and save it somewhere on your PC
+3. Install the addon (Procedure: [Freeplane Addons](https://docs.freeplane.org/getting-started/Add-ons_(install).html))
+3.1 In Freeplane, select Tools -> Add-ons -> Search and install -> Install add-on from a known location -> Search: select the file "h2aFreeplane-v2.0.addon.mm" from where you saved it
+3.2 Click on "Install" (it might take 30 seconds until any message box pops up, because the prebuilt Python executables are about 100 MB large and need to be unpacked)
+3.3 If the installation was successful, restart Freeplane. If the installation failed, see end of this section)
+4. After successful installation and restart (might be necessary to restart twice to resolve "Permission denied" error message), you should see Tools -> h2aFreeplane -> h2aFreeplane
+5. You can assign hotkeys to the execution of both scripts. I prefer "alt+h" for exeuction of "H2a Freeplane", and "alt+p" for execution of "H2a Open Pdf on Annot Page"
+6. To hide the attributes and attribute symbols for the annotation nodes: View->Node attributes->"Hide all attributes" and turn off "Show icon for attributes"
 
-<img src="https://github.com/jfriedlein/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch/blob/main/docu/Freeplane%20settings%20for%20script%20execution.png" width=50% height=50%>
+Note: What does "h2aFreeplane-v2.0.addon.mm" install, where, and why
+- Addons are installed to the user directory (can be accessed in Freeplane -> Tools -> Open user directory)
+- In the folder "addons", you find "h2aFreeplane" with subfolder "scripts".
+    - Therein "h2aFreeplane.groovy" is the main script that creates the mindmap nodes, calls the Python executables, etc.
+    - The folders "h2aFreeplane_Python-...-executables" contain the prebuilt Python executables "h2aFreeplane_caller" and "h2a_update_from_Freeplane_caller" (with needed packages) for Windows and Linux
+- In the folder "lib", the utility script "H2A_utilityScripts.groovy" is located. It contains common function that are used in "h2aFreeplane.groovy" and "h2aOpenPdfOnAnnotPage.groovy"
+    - It is located in the default script classpath for "lib".
+- In the folder "scripts", "h2aOpenPdfOnAnnotPage.groovy" is located, which enables to open the pdf from an annotation node in the mindmap and directly jump to the page that contains this annotation
+    - It is located in the default script search path to automatically add it to Tools -> Scripts -> "H2A Open Pdf On Annot page". Thereby it can be run from "child.link.text" via "menuitem" to start it by clicking the gray box in front of each annotation node.
+- Uninstalling the addon fails to remove the "addons/h2aFreeplane" folder, so manually delete it if needed
 
-4. In the Freeplane preferences add the path to "~/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch" to the "Script search path", see figure above
-5. Restart Freeplane to let it load the scripts.
-6. After the restart, you should see both scripts under Tools->Scripts
+### Using Freeplane scripts
+In case the addon installation does not work, you want to install the addon files in a central location, or some other reason:
+1. Install the mindmapping software Freeplane (the Freeplane versions should be less problematic here, also tested for 1.10.4, 1.12.5)
+2. Download the h2aFreeplane package (this repository), unpack the folder somewhere on your hard drive, e.g. "~/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch"
+3. Adapt the Freeplane preferences under Tools -> Preferences to allow automatic script execution (read and write permission are needed to create the tmp-files that transfer the information from Freeplane to the h2a-Python-executables and back, execution of external programs is needed to execute the h2a-Python-executables and start the pdf-viewer, it might be necessary to allow network operations if some file are located e.g. on a USB stick)
+4. In the Freeplane preferences add the path to "~/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch/scripts" (for "h2aFreeplane.groovy") and "~/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch/zips/scripts" (for "h2aOpenPdfOnAnnotPage.groovy") to the "Script search path"
+5. Open the file "h2aFreeplane.groovy" located in "~/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch/scripts". Set the variable "path_detour_for_local_tests" to "../zips/addons/h2aFreeplane/scripts/". Save the script and close it.
+6. Add the path to "H2A_utilityScripts.groovy" located in the subdirectory "zips/lib" to "Script classpath", e.g. "~/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch/zips/lib"
+7. Restart Freeplane to let it load the scripts.
+8. After the restart, you should see both scripts under Tools->Scripts
 
 <img src="https://github.com/jfriedlein/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch/blob/main/docu/Freeplane%20with%20successfully%20loaded%20h2aFreeplane%20scripts.png" width=50% height=50%>
 
-7. You can assign hotkeys to the execution of both scripts. I prefer "alt+h" for exeuction of "H2a Freeplane", and "alt+p" for execution of "H2a Open Pdf on Annot Page"
-8. To hide the attributes and attribute symbols for the annotation nodes: View->Node attributes->"Hide all attributes" and turn off "Show icon for attributes"
+9. You can assign hotkeys to the execution of both scripts. I prefer "alt+h" for exeuction of "H2a Freeplane", and "alt+p" for execution of "H2a Open Pdf on Annot Page"
+10. To hide the attributes and attribute symbols for the annotation nodes: View->Node attributes->"Hide all attributes" and turn off "Show icon for attributes"
+
 
 ## Usage
 Exemplary pdf with highlighted text:
@@ -49,7 +74,10 @@ Exemplary pdf with highlighted text:
 4. Now you can freely modify the annotation content and afterwards execute the script "H2a Freeplane" (e.g. by hotkey "alt+h") again to write your changes back into the pdf to synchronise both.
 <img src="https://github.com/jfriedlein/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch/blob/main/docu/Exemplary%20pdf%20with%20loaded%20annotations%20after%20some%20manual%20cleaning.png" width=50% height=50%>
 
-5. If you select one of the annotation nodes and execute the script "H2a Open Pdf on Annot Page" (e.g. by "alt+p" or clicking the button symbol at the front of an annotation node which needs to be selected), you can open the pdf directly jumping to the page where the selected annotation is located. Note that you will have to enter the paths to your desired pdf-viewer in the "h2aOpenPdfOnAnnotPage.groovy" script to be able to use it. By default, the script uses the default pdf viewer set on your PC to make sure the pdf can be opened. However, this default option does not support jumping to the annotation page. To enable this feature you can choose your desired pdf viewer and the paths and commands inside the h2aOpenPdfOnAnnotPage.groovy script. Please note that PDF viewers might protect the pdf file and block changes to it. Therefore, it might be necessary to close the pdf in the PDF viewer and then run h2a. Preferably use a PDF viewer without this "feature".
+5. If you select one of the annotation nodes and execute the script "H2a Open Pdf on Annot Page" (e.g. by "alt+p" or clicking the button symbol at the front of an annotation node which needs to be selected), you can open the pdf directly jumping to the page where the selected annotation is located.
+5.1 Note that you will have to enter the paths to your desired pdf-viewer in the "h2aOpenPdfOnAnnotPage.groovy" script to be able to use it. By default, the script uses the default pdf viewer set on your PC to make sure the pdf can be opened. However, this default option does not support jumping to the annotation page. To enable this feature you can choose your desired pdf viewer and the paths and commands inside the h2aOpenPdfOnAnnotPage.groovy script. Please note that PDF viewers might protect the pdf file and block changes to it. Therefore, it might be necessary to close the pdf in the PDF viewer and then run h2a. Preferably use a PDF viewer without this "feature".
+5.2 As this is a script, you will need to allow the execution of scripts in Freeplane -> Tools -> Preferences -> Plugins
+5.3 As this script starts a PDF viewer, you will need to allow the execution of external programs in Freeplane -> Tools -> Preferences -> Plugins
 
 <img src="https://github.com/jfriedlein/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch/blob/main/docu/Exemplary%20PDF%20after%20h2a%20and%20some%20manual%20cleaning.png" width=50% height=50%>
 
@@ -58,6 +86,7 @@ Exemplary pdf with highlighted text:
 7. After running h2aFreeplane on a pdf, the keyword "h2a" is added to the "keywords" field of the pdf metadata. This can be displayed e.g. in a file explorer to already see there whether a file has already been processed by h2aFreeplane. For windows file explorer [PDF Property Extension](https://coolsoft.altervista.org/en/pdfpropertyextension#technicaldetails) can enable showing pdf metadata. For Linux ...?
 
 8. In case of any problems, error messages should pop-up. In case of issues please create an "Issue" here in GitHub. Moreover, the Freeplane log files (open via Tools->Open user directory->logs->log.0) also give some information on the process of the script.
+
 
 ## Software scheme
 Freeplane -> groovy script as interface -> python executables processing the pdf
@@ -94,5 +123,6 @@ Docear (https://docear.org/) is a fantastic system, which might has been born to
 - Currently hardcoded to timezone Europe/Berlin
 - Check different timezone formats such as SumatraPDF "...Z" instead of "+1'00"
 - Currently only file ending ".pdf" is detected, not ".PDF", maybe use ".toLowerCase()" in all those places
+- Microsoft Edge: When changing the annotation text of an existing annotation, Edge does not change the modification time of the annotation, hence h2a cannot detect this change. Is this an Edge bug/feature?
 
 

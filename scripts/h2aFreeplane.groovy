@@ -22,28 +22,20 @@ path_to_this_folder = scriptLocation.getParent().toString();
 
 // First part of the paths to main literature folder that are different for Linux and Windows
 // @note Without the leading "file:"
- path_to_lit_folder_Linux = "/media/xxx/WUSB/"
- path_to_lit_folder_Windows = "/W:/"
+ path_to_lit_folder_Linux = ""
+ path_to_lit_folder_Windows = ""
 
 // Determine the operating system to choose the Windows or Linux built of the Python-executables
-// [https://stackoverflow.com/questions/4689240/detecting-the-platform-window-or-linux-by-groovy-grails]
-operatingSystem_tmp = System.properties['os.name'].toLowerCase()
-if ( operatingSystem_tmp.contains('windows') )
-{
-    operatingSystem = "Windows"
-}
-else if ( operatingSystem_tmp.contains('linux') )
-{
-    operatingSystem = "Linux"
-}
-else
-{
-    ui.errorMessage("h2aFreeplane<< Cannot determine operating system="+operatingSystem_tmp+" as 'Windows' or 'Linux'. Currently only Windows and Linux are supported.")
-}
+operatingSystem = H2A_utilityScripts.get_operatingSystem()
 
 // USER-PARAMETERS:
+// With the new folder structure for building the Freeplane addon, the following path detour enables to use the local h2aFreeplane.groovy with the local exe-file for testing (after setting the script search path in Freeplane->Preferences->Plugins)
+// @note The local "H2A_utilityScripts.groovy" is not considered and must be loaded/replaced manually
+//path_detour_for_local_tests = "../zips/addons/h2aFreeplane/scripts/"
+path_detour_for_local_tests = ""
+
 // Path to the python executable for the h2a_caller
- path_to_exe_folder = path_to_this_folder + File.separator + "h2aFreeplane_Python-"+operatingSystem+"-executables"+ File.separator
+ path_to_exe_folder = path_to_this_folder + File.separator + path_detour_for_local_tests + "h2aFreeplane_Python-"+operatingSystem+"-executables"+ File.separator
  path_to_h2a_caller =  path_to_exe_folder + "h2aFreeplane_caller"
 // Path to the python executable for h2a_update_from_Freeplane_caller
  path_to_h2a_update_from_Freeplane = path_to_exe_folder + "h2a_update_from_Freeplane_caller"
@@ -72,118 +64,6 @@ color_newly_added_annotationNodes = true
  debugging = 0
 
 
-// @todo try using find(*) or findAll(*) from [https://docs.freeplane.org/api/org/freeplane/api/ControllerRO.html#findAll()]
-def findChildrenGenerations ( node_with_pdf, node_type )
-{
-    // @todo-optimize Easily optimisable, e.g. by calling the function again on the sub-nodes etc.
-	def node_children1 = []
-	def node_children2 = []
-	def node_children3 = []
-
-
-    if ( node_type.equals("annot_nodes_only") )
-    {
-	   // Collect children, grandchildren, and grand-grandchildren to work on "all" sub-nodes
-       // @note It is possible that a child is not an annotation-node, but that a child of this non-annotation-node is still an annotation-node
-		// Collect all children of this node
-		node_with_pdf.children.each
-		{
-		   child1 ->
-		   if ( child1["annot_ID"] )
-		   {
-    		   node_children1 = node_children1 + child1
-		   }
-		}
-
-		// Collect all grandchildren (children2)
-        def node_children2_all = []
-		node_with_pdf.children.each
-		{
-		   node2 ->
-		   node2.children.each
-		   {
-    		   child2 ->
-               node_children2_all = node_children2_all + child2
-		   	   if ( child2["annot_ID"] )
-    		   {
-        		   node_children2 = node_children2 + child2
-    		   }
-		   }
-		}
-
-		// Collect all grand-grandchildren (children3)
-		node_children2_all.each
-		{
-		   node3 ->
-		   node3.children.each
-		   {
-    		   child3 ->
-		   	   if ( child3["annot_ID"] )
-    		   {
-        		   node_children3 = node_children3 + child3
-    		   }
-		   }
-		}
-
-		return (node_children1 + node_children2 + node_children3)
-	}
-	else if ( node_type.equals("all") )
-	{
-	   // Collect children, grandchildren, and grand-grandchildren to work on "all" sub-nodes
-		// Collect all children of this node
-		node_children1 = node_with_pdf.children
-		
-		// Collect all grandchildren (children2)
-		node_children1.each {
-		   child2 ->
-		   node_children2 = node_children2 + child2.children
-		}
-		
-		// Collect all grand-grandchildren (children3)
-		node_children2.each {
-		   child3 ->
-		    node_children3 = node_children3 + child3.children
-		}
-
-		return (node_children1 + node_children2 + node_children3)
-    }
-    else
-    {
-     	ui.errorMessage("findChildrenGenerations<< Called with unknown node_type="+node_type+".")
-    }
-}
-
-
-def findFirstParentWithPdfLink( node_selected )
-{
-	   // Find the first parent generation that contains a link to a PDF
-	   if ( node_selected.link.text && node_selected.link.text.contains(".pdf") )
-	   {
-		return node_selected
-	   }
-	   else if ( node_selected.parent.link.text && node_selected.parent.link.text.contains(".pdf") )
-	   {
-		return node_selected.parent
-	   }
-	   else if ( node_selected.parent.parent.link.text && node_selected.parent.parent.link.text.contains(".pdf") )
-	   {
-		return node_selected.parent.parent
-	   }
-	   else if ( node_selected.parent.parent.parent.link.text && node_selected.parent.parent.parent.link.text.contains(".pdf") )
-	   {
-		return node_selected.parent.parent.parent
-	   }
-	   else
-	   {
-		//ui.errorMessage("h2aFreeplane<< Cannot find node/parent/grandparent/grand-grandparent of node ("+node_selected.text+") that contains link to PDF")
-		return null
-   	   }
-}
-
-
-
-
-
 message_text = 'h2aFreeplane<< Starting ...'
 println ""
 println message_text
@@ -198,7 +78,7 @@ try
 
 	// Find the first parent of the selected node "node" that contains a link to a PDF (searches three generations up)
 	// @todo Of course the risks exists that we find the wrong node, if any other node contains a link to a PDF
-	 node_with_pdf = findFirstParentWithPdfLink( node )
+	 node_with_pdf = H2A_utilityScripts.findFirstParentWithPdfLink( node )
 	// If no node_with_pdf was found, print error message and end the script
 	 if ( !node_with_pdf )
 	 {
@@ -271,12 +151,13 @@ try
 	
 	if ( operatingSystem == "Linux" )
 	{
-        	command = ["bash","-c",'"'+path_to_h2a_caller +'" "' + path_to_pdf + '" '+'"'+ path_file_output+'"' + h2a_options]
+        commandInit = ["bash","-c",'chmod -x "'+path_to_h2a_caller +'"']
+	    def procInit = commandInit.execute()
+        command = ["bash","-c",'"'+path_to_h2a_caller +'" "' + path_to_pdf + '" '+'"'+ path_file_output+'"' + h2a_options]
 	}	
     else if ( operatingSystem ==  "Windows" )
 	{
 		command = "\""+path_to_h2a_caller.replace("\\","/")+"\" "+path_to_pdf.replace(" ","%20").replace("\\","/")+" "+path_file_output.replace(" ","%20").replace("\\","/") + h2a_options
-		//command = "python \"/Z:/5. Promotion_WD/commonFiles/PDF_save_highlighted_text_into_annotation/h2a_pdf-highlightedText_to_annotation/h2aFreeplane_caller.py\" "+path_to_pdf.replace(" ","%20").replace("\\","/")+" "+path_file_output.replace(" ","%20").replace("\\","/")
 	}
 
 	if ( debugging >= 1 ) { println "h2aFreeplane<< h2a-caller command=" + command }
@@ -342,7 +223,7 @@ try
       }
 	
 	   // Collect children, grandchildren, and grand-grandchildren to work on "all" sub-nodes ("all"=here only three generations)
-	    node_children123 = findChildrenGenerations ( node_with_pdf, "annot_nodes_only" )
+	    node_children123 = H2A_utilityScripts.findChildrenGenerations ( node_with_pdf, "annot_nodes_only" )
       
     list_of_annotIDs_in_pdf = []
 	// Read the pdf-output and apply only the changes to the nodes
@@ -592,7 +473,7 @@ try
 	 // If there is an annotation node in the mindmap, which however does now not exist
 	 // in the h2a_pdf-output.tmp, then this old node must have been deleted in the pdf in the meantime. Therefore, we also delete the associated node.
 	 // Collect children, grandchildren, and grand-grandchildren that now after updating exist
-	  node_children123_updated =  findChildrenGenerations ( node_with_pdf, "annot_nodes_only" )
+	  node_children123_updated =  H2A_utilityScripts.findChildrenGenerations ( node_with_pdf, "annot_nodes_only" )
 	  list_of_all_annotIDs_updated = []
 	  node_children123_updated.each
 	  {
@@ -670,7 +551,7 @@ try
 
 	    // Collect children, grandchildren, and grand-grandchildren
 	    // @todo-optimize Should be similar to above, besides the freshly created nodes
-	     node_children123 =  findChildrenGenerations ( node_with_pdf, "annot_nodes_only" )
+	     node_children123 =  H2A_utilityScripts.findChildrenGenerations ( node_with_pdf, "annot_nodes_only" )
 
         // Loop over each sub-node to check whether it was changed manually in Freeplane and output only those that were changed
 	     node_children123.each
@@ -737,6 +618,8 @@ try
 
 	if ( operatingSystem == "Linux" )
 	{
+        command2Init = ["bash","-c",'chmod -x "'+path_to_h2a_update_from_Freeplane +'"']
+	    def proc2Init = command2Init.execute()
 		command2 = ["bash","-c",'"'+path_to_h2a_update_from_Freeplane +'" "'+ path_file_changes+'"']
 	}	
 	else if ( operatingSystem ==  "Windows" )

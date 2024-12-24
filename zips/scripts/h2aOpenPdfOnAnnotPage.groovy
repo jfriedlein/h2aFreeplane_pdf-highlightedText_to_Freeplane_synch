@@ -5,57 +5,16 @@
 // @note For Windows the paths to the pdf-viewer executables can contain blank spaces but all backslashes "\" need to be replaced by slashes "/" for the paths to work in Java
 
 // USER-Parameters
-pdf_viewer_Linux = "okular"
-pdf_viewer_Windows = "adobe"
+pdf_viewer_Linux = "default"
+pdf_viewer_Windows = "default"
 
 // First part of the paths to main literature folder that are different for Linux and Windows
 // @note Without the leading "file:"
-path_to_lit_folder_Linux = "/media/xxx/WUSB/"
-path_to_lit_folder_Windows= "/W:/"
+path_to_lit_folder_Linux = ""
+path_to_lit_folder_Windows= ""
 
 // Determine the operating system to choose the Windows or Linux built of the Python-executables
-// [https://stackoverflow.com/questions/4689240/detecting-the-platform-window-or-linux-by-groovy-grails]
-operatingSystem_tmp = System.properties['os.name'].toLowerCase()
-if ( operatingSystem_tmp.contains('windows') )
-{
-    operatingSystem = "Windows"
-}
-else if ( operatingSystem_tmp.contains('linux') )
-{
-    operatingSystem = "Linux"
-}
-else
-{
-    ui.errorMessage("h2aOpenPdfOnAnnotPage<< Cannot determine operating system="+operatingSystem_tmp+" as 'Windows' or 'Linux'. Currently only Windows and Linux are supported.")
-}
-
-
-def findFirstParentWithPdfLink( node_selected )
-{
-	   // Find the first parent generation that contains a link to a PDF
-	   if ( node_selected.link.text && node_selected.link.text.contains(".pdf") )
-	   {
-		return node_selected
-	   }
-	   else if ( node_selected.parent.link.text && node_selected.parent.link.text.contains(".pdf") )
-	   {
-		return node_selected.parent
-	   }
-	   else if ( node_selected.parent.parent.link.text && node_selected.parent.parent.link.text.contains(".pdf") )
-	   {
-		return node_selected.parent.parent
-	   }
-	   else if ( node_selected.parent.parent.parent.link.text && node_selected.parent.parent.parent.link.text.contains(".pdf") )
-	   {
-		return node_selected.parent.parent.parent
-	   }
-	   else
-	   {
-		//ui.errorMessage("h2aFreeplane<< Cannot find node/parent/grandparent/grand-grandparent of node ("+node_selected.text+") that contains link to PDF")
-		return null
-   	   }
-}
-
+operatingSystem = H2A_utilityScripts.get_operatingSystem()
 
 try
 {
@@ -63,7 +22,7 @@ try
 
 	// Find the first parent of the selected node "node" that contains a link to a PDF (searches three generations up)
 	// @todo Of course the risks exists that we find the wrong node, if any other node contains a link to a PDF
-	 node_with_pdf = findFirstParentWithPdfLink( node )
+	 node_with_pdf = H2A_utilityScripts.findFirstParentWithPdfLink( node )
 	// If no node_with_pdf was found, print error message and end the script
 	 if ( !node_with_pdf )
 	 {
@@ -177,25 +136,25 @@ try
             case "adobe": // [https://stackoverflow.com/questions/619158/adobe-reader-command-line-reference]
                 path_to_adobe = "C:/Program Files/Adobe/Acrobat DC/Acrobat/Acrobat.exe"
                 Process process = new ProcessBuilder()
-                                      .command("\""+path_to_adobe+"\" /A \"page="+annot_page+"\" \""+path_to_pdf.replace("\\","/")+"\"")
+                                      .command("\""+path_to_adobe.replace("\\","/") + "\" /A \"page="+annot_page+"\" \""+path_to_pdf.replace("\\","/")+"\"")
                                       .start()
                 break
             case "okular": // []
 		        path_to_okular = "C:/Program Files/WindowsApps/KDEe.V.Okular_23.801.1522.0_x64__7vt06qxq7ptv8/bin/okular.exe"
                 Process process = new ProcessBuilder()
-                                      .command("\""+path_to_okular+"\" -p "+annot_page+" \""+path_to_pdf.replace("\\","/")+"\"")
+                                      .command("\""+path_to_okular.replace("\\","/") + "\" -p "+annot_page+" \""+path_to_pdf.replace("\\","/")+"\"")
                                       .start()
                 break
             case "pdfXchange": // [https://downloads.pdf-xchange.com/PDFVManual.pdf]
                 path_to_pdfXchange = "C:/Program Files (x86)/Tracker Software/PDF Viewer/PDFXCview.exe"
                 Process process = new ProcessBuilder()
-                                      .command("\""+path_to_pdfXchange +"\" /A \"page="+annot_page+"\" \""+path_to_pdf.replace("\\","/")+"\"")
+                                      .command("\""+path_to_pdfXchange.replace("\\","/") + "\" /A \"page="+annot_page+"\" \""+path_to_pdf.replace("\\","/")+"\"")
                                       .start()
                 break
             case "sumatra": // [https://www.sumatrapdfreader.org/docs/Command-line-arguments]
                 path_to_sumatra = "C:/Program Files (x86)/SumatraPDF/SumatraPDF.exe"
                 Process process = new ProcessBuilder()
-                                      .command("\""+path_to_sumatra +"\" -page "+annot_page+" \""+path_to_pdf.replace("\\","/")+"\"")
+                                      .command("\""+path_to_sumatra.replace("\\","/") + "\" -page "+annot_page+" \""+path_to_pdf.replace("\\","/")+"\"")
                                       .start()
                 break
             case "chrome":
