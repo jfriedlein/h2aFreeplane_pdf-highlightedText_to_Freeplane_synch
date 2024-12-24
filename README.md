@@ -21,7 +21,7 @@ h2aFreeplane resolves all of these issues.
 
 ## Installation and setup
 ### Using Freeplane addon "h2aFreeplane-v2.0.addon.mm"
-1. Install the mindmapping software Freeplane (https://docs.freeplane.org/) (ideally most recent version 1.12.8 or newer (tested for Linux 1.12.5 and Windows 1.12.8), for older versions see [section below ](##using-freeplane-scripts))
+1. Install the mindmapping software Freeplane (https://docs.freeplane.org/) (ideally most recent version 1.12.8 or newer (tested for Linux 1.12.5 and Windows 1.12.8), for older versions see [section below ](#using-freeplane-scripts))
 2. Download the Freeplane addon "h2aFreeplane-v2.0.addon.mm" and save it somewhere on your PC
 3. Install the addon (Procedure: [Freeplane Addons](https://docs.freeplane.org/getting-started/Add-ons_(install).html))
     - In Freeplane, select Tools -> Add-ons -> Search and install -> Install add-on from a known location -> Search: select the file "h2aFreeplane-v2.0.addon.mm" from where you saved it
