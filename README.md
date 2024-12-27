@@ -84,10 +84,6 @@ Exemplary pdf with highlighted text:
 8. In case of any problems, error messages should pop-up. In case of issues please create an "Issue" here in GitHub. Moreover, the Freeplane log files (open via Tools->Open user directory->logs->log.0) also give some information on the process of the script.
 
 
-## Software scheme
-
-<img src="https://github.com/jfriedlein/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch/blob/main/docu/h2aFreeplane-softwareStructure%20-%20V0.png" width=100% height=100%>
-
 ## Features
 - Extracts highlighted text from a pdf and enters the extracted text into the content of the annotation (using the h2a-engine, see https://github.com/jfriedlein/h2a_pdf-highlightedText_to_annotation for details)
 - Loads the content of annotations into Freeplane
@@ -98,8 +94,15 @@ Exemplary pdf with highlighted text:
 - Optional: Freshly added annotation nodes are coloured in green, when they are inserted. During the next execution of h2a, the colour will be reverted to the default text colour (black).
 - Optional: Freshly added annotations are sorted by page number. Therefore, a new annotation is placed before the first already existing annotation with a higher page number than the new one.
 
+
+## Software scheme
+<img src="https://github.com/jfriedlein/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch/blob/main/docu/h2aFreeplane-softwareStructure%20-%20V0.png" width=100% height=100%>
+
+The h2a-engine is available as separate repository [here](https://github.com/jfriedlein/h2a_pdf-highlightedText_to_annotation).
+
 ## Python executables
 Reading and writing of the pdf annotation is based on Python (fitz, pymupdf). However, due to pre-built executables your PC does not need to have Python or any module installed to be able to run h2aFreeplane. Currently the Python-executables are only pre-built for Windows and Linux, but it should easily be possible to build them e.g. for Mac (using auto-py-to-exe). In case there are some security considerations or your antivirus software does not like the Python executables, you can also easily build the Python executables by yourself (using Python3, fitz, auto-py-to-exe and the Python source code from https://github.com/jfriedlein/h2a_pdf-highlightedText_to_annotation building the files h2aFreeplane_caller.py, h2a_update_from_Freeplane_caller.py both with the folder h2a_functions).
+
 
 ## Docear
 Docear (https://docear.org/) is a fantastic system, which might has been born to early to truly thrive. Unfortunately, it nowadays appears outdated, unsupported, and somewhat buggy/error-prone (as of 2024). h2aFreeplane opts to revive the pdf handling capabilities of Docear bringing it into the current decade and trying to avoid some of its original shortcomings. We try to achieve this by:
@@ -110,6 +113,7 @@ Docear (https://docear.org/) is a fantastic system, which might has been born to
 - Using a temporary text file to transfer the annotation content from the Python executable reading the PDF annotation to Freeplane, and a separate file to write the changes from Freeplane into the PDF. This simplifies the execution and debugging as the files can be read by any user and contain not just a single just-in-time change.
 - Using Python to do the PDF annotation handling, which provides powerful, fast, and up to date packages, which are actively developed and extended.
 - Being usable with any PDF viewer (that creates proper annotations)
+
 
 ## ToDo
 - Annotation nodes need to stay as children (or grandchildren, ...) of the parent pdf-node, because only the parent pdf-node contains the link to the PDF as node link. So you cannot move an annotation node somewhere completely else, which was possible in Docear. The former approach is beneficial in case the path to the pdf changes, then we only need to change the path once in the parent node.
