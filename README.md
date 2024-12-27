@@ -85,9 +85,8 @@ Exemplary pdf with highlighted text:
 
 
 ## Software scheme
-Freeplane -> groovy script as interface -> python executables processing the pdf
 
-todo add image, etc.
+<img src="https://github.com/jfriedlein/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch/blob/main/docu/h2aFreeplane-softwareStructure%20-%20V0.png" width=100% height=100%>
 
 ## Features
 - Extracts highlighted text from a pdf and enters the extracted text into the content of the annotation (using the h2a-engine, see https://github.com/jfriedlein/h2a_pdf-highlightedText_to_annotation for details)
