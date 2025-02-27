@@ -109,15 +109,15 @@ def static findFirstParentWithPdfLink( node_selected )
 	   {
 		return node_selected
 	   }
-	   else if ( node_selected.parent.link.text && node_selected.parent.link.text.contains(".pdf") )
+	   else if ( node_selected.parent && node_selected.parent.link.text && node_selected.parent.link.text.contains(".pdf") )
 	   {
 		return node_selected.parent
 	   }
-	   else if ( node_selected.parent.parent.link.text && node_selected.parent.parent.link.text.contains(".pdf") )
+	   else if ( node_selected.parent.parent && node_selected.parent.parent.link.text && node_selected.parent.parent.link.text.contains(".pdf") )
 	   {
 		return node_selected.parent.parent
 	   }
-	   else if ( node_selected.parent.parent.parent.link.text && node_selected.parent.parent.parent.link.text.contains(".pdf") )
+	   else if ( node_selected.parent.parent.parent && node_selected.parent.parent.parent.link.text && node_selected.parent.parent.parent.link.text.contains(".pdf") )
 	   {
 		return node_selected.parent.parent.parent
 	   }
