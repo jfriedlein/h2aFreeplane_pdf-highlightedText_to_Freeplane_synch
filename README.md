@@ -91,9 +91,9 @@ Exemplary pdf with highlighted text:
 - Deleting an annotation in the PDF will delete the annotation node in Freeplane
 - Deleting an annotation node in Freeplane will not delete the annotation in the pdf (by design, could be changed if desired), but stops h2aFreeplane from again importing the annotation (will not appear in Freeplane again). To undo such a partly deleted annotation, remove the line that belongs to this annotation from the note of the parent pdf node, this will make h2aFreeplane import the annotation again.
 - You can rearrange the annotations, group them, add annotations nodes as children to annotations nodes and add non-annotation nodes (standard Freeplane nodes). Currently only three levels of children are supported (can be extended in the groovy script).
-- Optional: Freshly added annotation nodes are coloured in green, when they are inserted. During the next execution of h2a, the colour will be reverted to the default text colour (black).
-- Optional: Freshly added annotations are sorted by page number. Therefore, a new annotation is placed before the first already existing annotation with a higher page number than the new one.
-
+- Optional (on by default): Freshly added annotation nodes are coloured in green, when they are inserted. During the next execution of h2a, the colour will be reverted to the default text colour (black).
+- Optional (on by default): Freshly added annotations are sorted by page number. Therefore, a new annotation is placed before the first already existing annotation with a higher page number than the new one.
+- Optional (on by default): The annotation colour chosen in the pdf is copied to Freeplane. Hence, if you colour a text highlight or a note for instance red in the pdf, the corresponding annotation node in Freeplane will receive the same colour. The colours are also synchronised, such that colour changes in Freeplane also transfer to the PDF. Moreover, as most pdf viewers use a default color, often similar to yellow, for highlighting, we offer the option to ignore colours that are close (with adjustable tolerance) to a user-defined colour (see "annotColour_to_be_ignored" in h2aFreeplane.groovy).
 
 ## Software scheme
 <img src="https://github.com/jfriedlein/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch/blob/main/docu/h2aFreeplane-softwareStructure%20-%20V0.png" width=100% height=100%>
@@ -114,6 +114,11 @@ Docear (https://docear.org/) is a fantastic system, which might has been born to
 - Using Python to do the PDF annotation handling, which provides powerful, fast, and up to date packages, which are actively developed and extended.
 - Being usable with any PDF viewer (that creates proper annotations)
 
+## How to update the h2aFreeplane addon to a new version
+- Start Freeplane -> Tools -> Add-ons -> Uninstall "h2aFreeplane x.x"
+- Restart Freeplane -> Tools -> Open user directory -> manually delete the leftover subfolder "addons/h2aFreeplane" (for some reason not done automatically)
+- Download the new versions of h2aFreeplane and again follow the steps under [Installation and setup](#installation-and-setup))
+
 
 ## ToDo
 - Annotation nodes need to stay as children (or grandchildren, ...) of the parent pdf-node, because only the parent pdf-node contains the link to the PDF as node link. So you cannot move an annotation node somewhere completely else, which was possible in Docear. The former approach is beneficial in case the path to the pdf changes, then we only need to change the path once in the parent node.
@@ -124,5 +129,5 @@ Docear (https://docear.org/) is a fantastic system, which might has been born to
 - Currently only file ending ".pdf" is detected, not ".PDF", maybe use ".toLowerCase()" in all those places
 - Microsoft Edge: When changing the annotation text of an existing annotation, Edge does not change the modification time of the annotation, hence h2a cannot detect this change. Is this an Edge bug/feature?
 
-## Testing status (24.12.2024): 777 pdfs, 17614 annotations
+## Testing status (27.02.2025): 820 pdfs, 18646 annotations
 
