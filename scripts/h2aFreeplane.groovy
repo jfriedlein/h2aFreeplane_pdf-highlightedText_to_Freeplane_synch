@@ -71,6 +71,8 @@ color_newly_added_annotationNodes = true
  // A tolerance of 0, will only ignore exactly annotColour_to_be_ignored, whereas a tolerance of more than sqrt(3) will ignore every colour
   annotColour_to_be_ignored_tolerance = 0.25
 
+// Optionally add an attribute to all new annotation nodes containing a backup file path to the pdf
+ add_backup_filepath_attribute = true
 
 // [thanks to perplexity.ai]
 class ColorChecker
@@ -454,7 +456,10 @@ try
         		 child.attributes.set("annot_ID",annot_ID)
         		 child.attributes.set("annot_modTime_PDF",annot_time)
         		 child.attributes.set("annot_status","ok")
-        		 child.attributes.set("backup_path_to_pdf",path_to_pdf)
+                 if ( add_backup_filepath_attribute )
+                 {
+        		    child.attributes.set("backup_path_to_pdf",path_to_pdf)
+                 }
 
                  if ( colour_node_in_annotColour )
                  {
