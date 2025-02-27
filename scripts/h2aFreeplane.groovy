@@ -428,7 +428,7 @@ try
 	   
 	   // We looped over each node, but did not find a node with the annot_ID from the pdf.
 	   //  And if we currently do not process the H2A-protocol, which should not be shown in Freeplane.
-       //  Then we finally CREATE the node.
+       //  Then we finally #CREATE the node.
 	    if ( annot_ID_Found == false && !annot_text.contains('H2A-protocol:') )
 	    {
     	  	if ( debugging >= 1 ) 
@@ -454,6 +454,7 @@ try
         		 child.attributes.set("annot_ID",annot_ID)
         		 child.attributes.set("annot_modTime_PDF",annot_time)
         		 child.attributes.set("annot_status","ok")
+        		 child.attributes.set("backup_path_to_pdf",path_to_pdf)
 
                  if ( colour_node_in_annotColour )
                  {
