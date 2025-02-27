@@ -1,6 +1,6 @@
 <map version="freeplane 1.12.1">
 <!--To view this file, download free mind mapping software Freeplane from https://www.freeplane.org -->
-<node TEXT="h2aFreeplane" FOLDED="false" ID="ID_696401721" CREATED="1610381621824" MODIFIED="1734939749063" LINK="https://github.com/jfriedlein/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch" BACKGROUND_COLOR="#97c7dc" STYLE="oval">
+<node TEXT="h2aFreeplane" FOLDED="false" ID="ID_696401721" CREATED="1610381621824" MODIFIED="1740662131126" LINK="https://github.com/jfriedlein/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch" BACKGROUND_COLOR="#97c7dc" STYLE="oval">
 <font SIZE="16" BOLD="true" ITALIC="true"/>
 <hook NAME="MapStyle">
     <properties edgeColorConfiguration="#808080ff,#ff0000ff,#0000ffff,#00ff00ff,#ff00ffff,#00ffffff,#7c0000ff,#00007cff,#007c00ff,#7c007cff,#007c7cff,#7c7c00ff" show_icon_for_attributes="true" show_tags="UNDER_NODES" associatedTemplateLocation="template:/standard-1.6.mm" show_note_icons="true" fit_to_viewport="false"/>
@@ -75,7 +75,7 @@
 </hook>
 <hook NAME="AutomaticEdgeColor" COUNTER="11" RULE="ON_BRANCH_CREATION"/>
 <attribute NAME="name" VALUE="h2aFreeplane"/>
-<attribute NAME="version" VALUE="v2.0" OBJECT="org.freeplane.features.format.FormattedObject|java.lang.String&amp;#x7c;v2.0|number:decimal:#0.####"/>
+<attribute NAME="version" VALUE="v2.1" OBJECT="org.freeplane.features.format.FormattedObject|java.lang.String&amp;#x7c;v2.1|number:decimal:#0.####"/>
 <attribute NAME="author" VALUE="jfriedlein"/>
 <attribute NAME="freeplaneVersionFrom" VALUE="v1.6"/>
 <attribute NAME="freeplaneVersionTo" VALUE=""/>
