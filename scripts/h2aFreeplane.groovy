@@ -60,6 +60,38 @@ color_newly_added_annotationNodes = true
 // Color used to mark newly added annotations
  Color DARK_GREEN = new Color(0,102,0);
 
+
+// Annotation nodes in Freeplane can use the colour of the pdf annotations. E.g. if you colour the annotation in the pdf red, the node in Freeplane will also be coloured red, and vice versa.
+ colour_node_in_annotColour = true
+// Opacity of above background colour (0: transparent, 1: opac)
+ opacity_background_colour = 0.3
+// Most pdf viewers use a default color, often similar to yellow ([1,1,0]), for highlighting, to avoid all nodes with default colour to appear yellowish in the mindmap, we offer the option to ignore colours that are close (with adjustable tolerance) to a user-defined colour.
+ // Set rgb-values for annotations colour to be ignored. Use rgb-values (0...1). Deactive the annotColour_to_be_ignored by setting it to an empty list "[]".
+  annotColour_to_be_ignored = [1,1,0]
+ // A tolerance of 0, will only ignore exactly annotColour_to_be_ignored, whereas a tolerance of more than sqrt(3) will ignore every colour
+  annotColour_to_be_ignored_tolerance = 0.25
+
+
+// [thanks to perplexity.ai]
+class ColorChecker
+{
+    static boolean checkIfColorAccept(List<Float> colorToBeChecked, List<Float> annotColour_to_be_ignored, float annotColour_to_be_ignored_tolerance)
+    {
+        if ( annotColour_to_be_ignored.size() == 0 )
+        {
+           return true
+        }
+
+        float distance = Math.sqrt(
+            (colorToBeChecked[0] - annotColour_to_be_ignored[0])**2 + 
+            (colorToBeChecked[1] - annotColour_to_be_ignored[1])**2 + 
+            (colorToBeChecked[2] - annotColour_to_be_ignored[2])**2
+        )
+        // Accept the color only if it is far enough away from the to be ignored colour
+        return distance > annotColour_to_be_ignored_tolerance
+    }
+}
+
 // Choose a debugging level, that is active when use node scripts via println or in "log" files. 0=no debugging output, 1=first level of debugging outputs, 2=..., 99=all levels
  debugging = 0
 
@@ -151,7 +183,7 @@ try
 	
 	if ( operatingSystem == "Linux" )
 	{
-        commandInit = ["bash","-c",'chmod -x "'+path_to_h2a_caller +'"']
+        commandInit = ["bash","-c",'chmod +x "'+path_to_h2a_caller +'"']
 	    def procInit = commandInit.execute()
         command = ["bash","-c",'"'+path_to_h2a_caller +'" "' + path_to_pdf + '" '+'"'+ path_file_output+'"' + h2a_options]
 	}	
@@ -240,6 +272,7 @@ try
 	    annot_page = line_split[2]
 	    annot_ID = line_split[3].toString()
 	    annot_time = line_split[4].toString()
+	    annot_colour = (line_split[5].toString())[1..-2].split(',').collect { it as Float }
 	   
 	   // Collect the annotations to later check if any was deleted in the PDF.
 	   // @note We combine the annotation-ID with the annotation-page to create a unique string.
@@ -341,6 +374,22 @@ try
 	                    // Action: Read the newer text from the pdf
 	                    child.text = annot_text
 	                    child["annot_modTime_PDF"] = annot_time
+
+                        if ( colour_node_in_annotColour )
+                        {
+                            if (  ColorChecker.checkIfColorAccept(annot_colour,annotColour_to_be_ignored,annotColour_to_be_ignored_tolerance) )
+                            {
+                        		 // Assign RGB values from annot_colour to the background colour of the node
+                                 child.style.backgroundColor = new Color(annot_colour[0],annot_colour[1],annot_colour[2],opacity_background_colour)
+                            }
+                            else
+                            {
+                        		 // If colour of pdf annotation shall be ignored, we set the background colour to "null".
+                                 //  This will ensure that changing a background colour back to an ignored colour will also reset the node's colour
+                                  child.style.backgroundColor = null
+                            }
+                        }
+
 	                    // Update the time, because it changed by overwriting "child.text" above. It is important the the stored time "annot_modTime_Freeplane" is equal to the lastModifiedAt time for the above ".equals" to work
 	                     child["annot_modTime_Freeplane"] = node_lastModified.toString()
 	                }
@@ -378,7 +427,8 @@ try
 	   } // end node_children123.any
 	   
 	   // We looped over each node, but did not find a node with the annot_ID from the pdf.
-	   //  And if we currently do not process the H2A-protocol, which should not be shown in Freeplane. Then we create the node.
+	   //  And if we currently do not process the H2A-protocol, which should not be shown in Freeplane.
+       //  Then we finally CREATE the node.
 	    if ( annot_ID_Found == false && !annot_text.contains('H2A-protocol:') )
 	    {
     	  	if ( debugging >= 1 ) 
@@ -404,10 +454,20 @@ try
         		 child.attributes.set("annot_ID",annot_ID)
         		 child.attributes.set("annot_modTime_PDF",annot_time)
         		 child.attributes.set("annot_status","ok")
-        		 lastModTime = child.lastModifiedAt.toString()
-                 child.attributes.set("annot_modTime_Freeplane",lastModTime)
+
+                 if ( colour_node_in_annotColour )
+                 {
+                    if (  ColorChecker.checkIfColorAccept(annot_colour,annotColour_to_be_ignored,annotColour_to_be_ignored_tolerance) )
+                    {
+                		 // Assign RGB values from annot_colour to the background colour of the node
+                          child.style.backgroundColor = new Color(annot_colour[0],annot_colour[1],annot_colour[2],opacity_background_colour)
+                    }
+                 }
 
         		 child.link.text = 'menuitem:_H2aOpenPdfOnAnnotPage_on_single_node'
+
+        		 lastModTime = child.lastModifiedAt.toString()
+                 child.attributes.set("annot_modTime_Freeplane",lastModTime)
 
             	   if ( debugging >= 2 )
             	   {
@@ -529,7 +589,7 @@ catch (Exception e)
 
 // #######################################################################################
 
-// Check for changes done manually to the nodes and output them to tmp
+// Check for changes done manually to the nodes in Freeplane and output them to tmp to update the PDF
 try
 {
 	c.statusInfo = 'h2aFreeplane<< Checking for manual changes in Freeplane ...' 
@@ -582,6 +642,20 @@ try
     	        // Overwrite the actual modification time to unify the times
     	        // @todo Check why the lastModified times are so weired if done without overwriting
     	         child.lastModifiedAt = node_lastModified
+
+                child_backgroundColour_string = ""
+                // If the annotation nodes shall be coloured based on the colour of the pdf annotation,
+                //  we also want to synch the colour of the annotation node back into the pdf.
+                //  For this the background colour must be defined (child.style.backgroundColor==true) and not white (getRGB()!=-1)
+                if ( colour_node_in_annotColour && child.style.backgroundColor && child.style.backgroundColor.getRGB()!=-1 )
+                {
+                    // Extract the rgb values of the node's background colour [code thanks to perplexity.ai]
+                    child_backgroundColour_rgb = child.style.backgroundColor.getRGB()
+                    child_backgroundColour_red =   ((child_backgroundColour_rgb >> 16) & 0xFF)/255
+                    child_backgroundColour_green = ((child_backgroundColour_rgb >> 8) & 0xFF )/255
+                    child_backgroundColour_blue =   (child_backgroundColour_rgb & 0xFF       )/255
+                    child_backgroundColour_string = "[$child_backgroundColour_red,$child_backgroundColour_green,$child_backgroundColour_blue]"
+                }
     	        
     	        // @todo Somehow centralise the order in which the data is stored (page, type, ID, ...)
     	         writer.writeLine (
@@ -591,6 +665,7 @@ try
     	                            + child["annot_ID"] + ES
     	                            + child["annot_modTime_PDF"] + ES
     	                            + child["annot_modTime_Freeplane"] + ES
+    	                            + child_backgroundColour_string + ES
     	                          )
     	     } // end if ( node modified in Freeplane )
     	} // end for each sub-node
@@ -618,7 +693,7 @@ try
 
 	if ( operatingSystem == "Linux" )
 	{
-        command2Init = ["bash","-c",'chmod -x "'+path_to_h2a_update_from_Freeplane +'"']
+        command2Init = ["bash","-c",'chmod +x "'+path_to_h2a_update_from_Freeplane +'"']
 	    def proc2Init = command2Init.execute()
 		command2 = ["bash","-c",'"'+path_to_h2a_update_from_Freeplane +'" "'+ path_file_changes+'"']
 	}	
