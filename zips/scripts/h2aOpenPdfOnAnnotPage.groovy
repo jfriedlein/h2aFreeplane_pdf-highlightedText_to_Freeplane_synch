@@ -23,17 +23,29 @@ try
 	// Find the first parent of the selected node "node" that contains a link to a PDF (searches three generations up)
 	// @todo Of course the risks exists that we find the wrong node, if any other node contains a link to a PDF
 	 node_with_pdf = H2A_utilityScripts.findFirstParentWithPdfLink( node )
-	// If no node_with_pdf was found, print error message and end the script
-	 if ( !node_with_pdf )
+	// If node_with_pdf was found, ...
+	 if ( node_with_pdf )
+     {
+        // ... extract path to the PDF from the node_with_pdf node
+         path_to_pdf = node_with_pdf.link.file.toString().replace("%20"," ")
+	 }
+     else
 	 {
-		ui.errorMessage("openPdfOnAnnotPage<< Cannot find node/parent/grandparent/grand-grandparent of node ("
-                		+ node.text + ") that contains link to PDF.")
-		return false
+        // ... else we check for the "backup_path_to_pdf" attribute
+        // If it exists, then we try this path, ...
+        if ( node["backup_path_to_pdf"] )
+        {
+            path_to_pdf = node["backup_path_to_pdf"]
+        }
+        else
+        {
+            // ... else print error message and end the script
+		    ui.errorMessage("openPdfOnAnnotPage<< Cannot find node/parent/grandparent/grand-grandparent of node ("
+                    		+ node.text + ") that contains link to PDF.")
+		    return false
+        }
 	 }
 
-    // Extract path to the PDF from the node_with_pdf node
-     path_to_pdf = node_with_pdf.link.file.toString().replace("%20"," ")
-	
     // Adapt the path depending on the current PC
     // @todo This gives a nice standalone function to be used in different scripts (make standalone and callable)
      if ( operatingSystem=="Linux" )
