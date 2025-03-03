@@ -16,9 +16,9 @@ h2aFreeplane resolves all of these issues.
 
 
 ## Installation and setup
-### Using Freeplane addon "h2aFreeplane-v2.0.addon.mm"
+### Using Freeplane addon "h2aFreeplane-vx.x.addon.mm"
 1. Install the mindmapping software Freeplane (https://docs.freeplane.org/) (ideally most recent version 1.12.8 or newer (tested for Linux 1.12.5 and Windows 1.12.8), for older versions see [section below](#using-freeplane-scripts))
-2. Download the Freeplane addon "h2aFreeplane-v2.0.addon.mm" (see releases) and save it somewhere on your PC
+2. Download the Freeplane addon "h2aFreeplane-vx.x.addon.mm" (see releases in column on the right) and save it somewhere on your PC
 3. Install the addon (Procedure: [Freeplane Addons](https://docs.freeplane.org/getting-started/Add-ons_(install).html))
     - In Freeplane, select Tools -> Add-ons -> Search and install -> Install add-on from a known location -> Search: select the file "h2aFreeplane-v2.0.addon.mm" from where you saved it
     - Click on "Install" (it might take 30 seconds until any message box pops up, because the prebuilt Python executables are about 100 MB large and need to be unpacked)
@@ -95,6 +95,13 @@ Exemplary pdf with highlighted text:
 - Optional (on by default): Freshly added annotations are sorted by page number. Therefore, a new annotation is placed before the first already existing annotation with a higher page number than the new one.
 - Optional (on by default): The annotation colour chosen in the pdf is copied to Freeplane. Hence, if you colour a text highlight or a note for instance red in the pdf, the corresponding annotation node in Freeplane will receive the same colour. The colours are also synchronised, such that colour changes in Freeplane also transfer to the PDF. Moreover, as most pdf viewers use a default color, often similar to yellow, for highlighting, we offer the option to ignore colours that are close (with adjustable tolerance) to a user-defined colour (see "annotColour_to_be_ignored" in h2aFreeplane.groovy).
 
+## Customise
+- Freeplane -> Tools -> Open user directory
+- Go to subfolder: addons/h2aFreeplane/scripts
+    - Edit file "h2aFreeplane.groovy": sort_newly_added_annotationNodes_by_page, color_newly_added_annotationNodes, colour_node_in_annotColour, add_backup_filepath_attribute, ...
+- Go to subfolder: scripts
+    - Edit file "h2aOpenPdfOnAnnotPage.groovy": pdf_viewer_Linux, pdf_viewer_Windows, path_to_lit_folder_x, ...
+
 ## Software scheme
 <img src="https://github.com/jfriedlein/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch/blob/main/docu/h2aFreeplane-softwareStructure%20-%20V0.png" width=100% height=100%>
 
@@ -118,6 +125,7 @@ Docear (https://docear.org/) is a fantastic system, which might has been born to
 - Start Freeplane -> Tools -> Add-ons -> Uninstall "h2aFreeplane x.x"
 - Restart Freeplane -> Tools -> Open user directory -> manually delete the leftover subfolder "addons/h2aFreeplane" (for some reason not done automatically)
 - Download the new versions of h2aFreeplane and again follow the steps under [Installation and setup](#installation-and-setup))
+- Remember to again make custom changes to the installed groovy files, such as setting your preferred pdf-viewer, switching optional features on/off, updating custom paths, ...
 
 
 ## ToDo
@@ -126,6 +134,7 @@ Docear (https://docear.org/) is a fantastic system, which might has been born to
 - When hovering over the nodes the attributes and notes pop-up. This can be distracting, but is a Freeplane settings. Can this be deactivated?
 - Currently hardcoded to timezone Europe/Berlin
 - Check different timezone formats such as SumatraPDF "...Z" instead of "+1'00"
+- Add a separate file with custom-parameters to keep those values when updating to a new version
 - Currently only file ending ".pdf" is detected, not ".PDF", maybe use ".toLowerCase()" in all those places
 - Microsoft Edge: When changing the annotation text of an existing annotation, Edge does not change the modification time of the annotation, hence h2a cannot detect this change. Is this an Edge bug/feature?
 
