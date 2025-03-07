@@ -139,7 +139,6 @@ Docear (https://docear.org/) is a fantastic system, which might has been born to
 - When hovering over the nodes the attributes and notes pop-up. This can be distracting, but is a Freeplane settings. Can this be deactivated?
 - Currently hardcoded to timezone Europe/Berlin
 - Check different timezone formats such as SumatraPDF "...Z" instead of "+1'00"
-- Add a separate file with custom-parameters to keep those values when updating to a new version
 - Currently only file ending ".pdf" is detected, not ".PDF", maybe use ".toLowerCase()" in all those places
 - Microsoft Edge: When changing the annotation text of an existing annotation, Edge does not change the modification time of the annotation, hence h2a cannot detect this change. Is this an Edge bug/feature?
 
