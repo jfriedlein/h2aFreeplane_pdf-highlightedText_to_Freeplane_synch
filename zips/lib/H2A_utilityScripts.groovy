@@ -1,5 +1,5 @@
 // Utility scripts based on ["https://docs.freeplane.org/scripting/Your_own_utility_script_library.html"]
-// @IMPORTANT In Freeplane under Tools->Preferences->Plugins->"Script classpath" set the path to the folder containing this script
+// @IMPORTANT If you did not install this via an addon, set the path to the folder containing this script in Freeplane under Tools->Preferences->Plugins->"Script classpath" 
 
 def static get_operatingSystem()
 {
@@ -22,12 +22,14 @@ def static get_operatingSystem()
 
 
 // @todo try using find(*) or findAll(*) from [https://docs.freeplane.org/api/org/freeplane/api/ControllerRO.html#findAll()]
+// @todo Allow to search for all children generations to avoid the ugly and limited coding below
 def static findChildrenGenerations ( node_with_pdf, node_type )
 {
     // @todo-optimize Easily optimisable, e.g. by calling the function again on the sub-nodes etc.
 	def node_children1 = []
 	def node_children2 = []
 	def node_children3 = []
+	def node_children4 = []
 
 
     if ( node_type.equals("annot_nodes_only") )
@@ -61,12 +63,14 @@ def static findChildrenGenerations ( node_with_pdf, node_type )
 		}
 
 		// Collect all grand-grandchildren (children3)
+        def node_children3_all = []
 		node_children2_all.each
 		{
 		   node3 ->
 		   node3.children.each
 		   {
     		   child3 ->
+               node_children3_all = node_children3_all + child3
 		   	   if ( child3["annot_ID"] )
     		   {
         		   node_children3 = node_children3 + child3
@@ -74,7 +78,21 @@ def static findChildrenGenerations ( node_with_pdf, node_type )
 		   }
 		}
 
-		return (node_children1 + node_children2 + node_children3)
+		// Collect all grand-grand-grandchildren (children4)
+		node_children3_all.each
+		{
+		   node4 ->
+		   node4.children.each
+		   {
+    		   child4 ->
+		   	   if ( child4["annot_ID"] )
+    		   {
+        		   node_children4 = node_children4 + child4
+    		   }
+		   }
+		}
+
+		return (node_children1 + node_children2 + node_children3 + node_children4)
 	}
 	else if ( node_type.equals("all") )
 	{
@@ -94,7 +112,13 @@ def static findChildrenGenerations ( node_with_pdf, node_type )
 		    node_children3 = node_children3 + child3.children
 		}
 
-		return (node_children1 + node_children2 + node_children3)
+		// Collect all grand-grand-grandchildren (children4)
+		node_children3.each {
+		   child4 ->
+		    node_children4 = node_children4 + child4.children
+		}
+
+		return (node_children1 + node_children2 + node_children3 + node_children3)
     }
     else
     {
@@ -102,6 +126,7 @@ def static findChildrenGenerations ( node_with_pdf, node_type )
     }
 }
 
+// @todo Allow to search for all parent generations to avoid the ugly and limited coding below
 def static findFirstParentWithPdfLink( node_selected )
 {
 	   // Find the first parent generation that contains a link to a PDF
@@ -120,6 +145,10 @@ def static findFirstParentWithPdfLink( node_selected )
 	   else if ( node_selected.parent.parent.parent && node_selected.parent.parent.parent.link.text && node_selected.parent.parent.parent.link.text.contains(".pdf") )
 	   {
 		return node_selected.parent.parent.parent
+	   }
+	   else if ( node_selected.parent.parent.parent.parent && node_selected.parent.parent.parent.parent.link.text && node_selected.parent.parent.parent.parent.link.text.contains(".pdf") )
+	   {
+		return node_selected.parent.parent.parent.parent
 	   }
 	   else
 	   {
