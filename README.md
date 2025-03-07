@@ -95,13 +95,8 @@ Exemplary pdf with highlighted text:
     - Optional (on by default): Freshly added annotation nodes are coloured in green, when they are inserted. During the next execution of h2a, the colour will be reverted to the default text colour (black).
     - Optional (on by default): Freshly added annotations are sorted by page number. Therefore, a new annotation is placed before the first already existing annotation with a higher page number than the new one.
     - Optional (on by default): The annotation colour chosen in the pdf is copied to Freeplane. Hence, if you colour a text highlight or a note for instance red in the pdf, the corresponding annotation node in Freeplane will receive the same colour. The colours are also synchronised, such that colour changes in Freeplane also transfer to the PDF. Moreover, as most pdf viewers use a default color, often similar to yellow, for highlighting, we offer the option to ignore colours that are close (with adjustable tolerance) to a user-defined colour (see "annotColour_to_be_ignored" [below](#how-to-customise-h2aFreeplane-by-user-settings) ).
+    - Optional: Choose your desired pdf-viewer to directly open the pdf on the page where the selected annotation is in the pdf (user-setting: "pdf_viewer_Linux"/"pdf_viewer_Windows")
 
-## Customise
-- Freeplane -> Tools -> Open user directory
-- Go to subfolder: addons/h2aFreeplane/scripts
-    - Edit file "h2aFreeplane.groovy": sort_newly_added_annotationNodes_by_page, color_newly_added_annotationNodes, colour_node_in_annotColour, add_backup_filepath_attribute, ...
-- Go to subfolder: scripts
-    - Edit file "h2aOpenPdfOnAnnotPage.groovy": pdf_viewer_Linux, pdf_viewer_Windows, path_to_lit_folder_x, ...
 
 ## Software scheme
 <img src="https://github.com/jfriedlein/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch/blob/main/docu/h2aFreeplane-softwareStructure%20-%20V0.png" width=100% height=100%>
