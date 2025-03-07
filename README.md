@@ -91,9 +91,10 @@ Exemplary pdf with highlighted text:
 - Deleting an annotation in the PDF will delete the annotation node in Freeplane
 - Deleting an annotation node in Freeplane will not delete the annotation in the pdf (by design, could be changed if desired), but stops h2aFreeplane from again importing the annotation (will not appear in Freeplane again). To undo such a partly deleted annotation, remove the line that belongs to this annotation from the note of the parent pdf node, this will make h2aFreeplane import the annotation again.
 - You can rearrange the annotations, group them, add annotations nodes as children to annotations nodes and add non-annotation nodes (standard Freeplane nodes). Currently only three levels of children are supported (can be extended in the groovy script).
-- Optional (on by default): Freshly added annotation nodes are coloured in green, when they are inserted. During the next execution of h2a, the colour will be reverted to the default text colour (black).
-- Optional (on by default): Freshly added annotations are sorted by page number. Therefore, a new annotation is placed before the first already existing annotation with a higher page number than the new one.
-- Optional (on by default): The annotation colour chosen in the pdf is copied to Freeplane. Hence, if you colour a text highlight or a note for instance red in the pdf, the corresponding annotation node in Freeplane will receive the same colour. The colours are also synchronised, such that colour changes in Freeplane also transfer to the PDF. Moreover, as most pdf viewers use a default color, often similar to yellow, for highlighting, we offer the option to ignore colours that are close (with adjustable tolerance) to a user-defined colour (see "annotColour_to_be_ignored" in h2aFreeplane.groovy).
+- Customisable user-settings: ([below](#how-to-customise-h2aFreeplane-by-user-settings))
+    - Optional (on by default): Freshly added annotation nodes are coloured in green, when they are inserted. During the next execution of h2a, the colour will be reverted to the default text colour (black).
+    - Optional (on by default): Freshly added annotations are sorted by page number. Therefore, a new annotation is placed before the first already existing annotation with a higher page number than the new one.
+    - Optional (on by default): The annotation colour chosen in the pdf is copied to Freeplane. Hence, if you colour a text highlight or a note for instance red in the pdf, the corresponding annotation node in Freeplane will receive the same colour. The colours are also synchronised, such that colour changes in Freeplane also transfer to the PDF. Moreover, as most pdf viewers use a default color, often similar to yellow, for highlighting, we offer the option to ignore colours that are close (with adjustable tolerance) to a user-defined colour (see "annotColour_to_be_ignored" [below](#how-to-customise-h2aFreeplane-by-user-settings) ).
 
 ## Customise
 - Freeplane -> Tools -> Open user directory
@@ -127,6 +128,15 @@ Docear (https://docear.org/) is a fantastic system, which might has been born to
 - Download the new versions of h2aFreeplane and again follow the steps under [Installation and setup](#installation-and-setup))
 - Remember to again make custom changes to the installed groovy files, such as setting your preferred pdf-viewer, switching optional features on/off, updating custom paths, ...
 
+## How to customise h2aFreeplane by user-settings
+- Since v2.2, you find the file "H2A_userSettings_DEFAULT.groovy" in the Freeplane user directory in the subfolder "lib".
+- When you change user-settings for the first time:
+    - Rename the file to "H2A_userSettings.groovy", and edit its content by renaming the class "H2A_userSettings_DEFAULT" to "H2A_userSettings".
+    - Then you can modify the user settings. After changing the user-settings, you need to restart Freeplane to let it reload the lib-file.
+    - The renamed file "H2A_userSettings.groovy" will be kept also after uninstalling and reinstalling (updating) h2aFreeplane. Therefore, you custom user-settings are kept for all future updates.
+- When you change user-settings and already did the initial steps of the previous bullet point
+    - Change the user settings
+    - Manually insert parameters from the "H2A_userSettings_DEFAULT.groovy" file, that might have been added in a future release.
 
 ## ToDo
 - Annotation nodes need to stay as children (or grandchildren, ...) of the parent pdf-node, because only the parent pdf-node contains the link to the PDF as node link. So you cannot move an annotation node somewhere completely else, which was possible in Docear. The former approach is beneficial in case the path to the pdf changes, then we only need to change the path once in the parent node.
