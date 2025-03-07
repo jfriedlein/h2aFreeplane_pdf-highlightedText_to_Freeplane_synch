@@ -244,7 +244,7 @@
 <attribute NAME="addons.${name}.h2aOpenPdfOnAnnotPage" VALUE="h2aOpenPdfOnAnnotPage"/>
 </node>
 </node>
-<node TEXT="deinstall" POSITION="top_or_left" ID="ID_935593604" CREATED="1734939579324" MODIFIED="1741366195683">
+<node TEXT="deinstall" POSITION="top_or_left" ID="ID_935593604" CREATED="1734939579324" MODIFIED="1741367248157">
 <edge COLOR="#00007c"/>
 <richcontent TYPE="NOTE">
 <html>
@@ -266,6 +266,7 @@
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/h2aFreeplane_Python-Linux-executables/h2aFreeplane_caller"/>
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/h2aFreeplane_Python-Linux-executables/h2a_update_from_Freeplane_caller"/>
 <attribute NAME="delete" VALUE="${installationbase}/lib/H2A_utilityScripts.groovy"/>
+<attribute NAME="delete" VALUE="${installationbase}/lib/H2A_userSettings_DEFAULT.groovy"/>
 <attribute NAME="delete" VALUE="${installationbase}/scripts/h2aOpenPdfOnAnnotPage.groovy"/>
 <attribute NAME="delete" VALUE="${installationbase}/scripts/h2aSortAnnotsByPage.groovy"/>
 </node>
