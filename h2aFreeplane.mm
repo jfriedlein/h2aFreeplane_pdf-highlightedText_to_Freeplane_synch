@@ -1,6 +1,6 @@
 <map version="freeplane 1.12.1">
 <!--To view this file, download free mind mapping software Freeplane from https://www.freeplane.org -->
-<node TEXT="h2aFreeplane" FOLDED="false" ID="ID_696401721" CREATED="1610381621824" MODIFIED="1740662131126" LINK="https://github.com/jfriedlein/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch" BACKGROUND_COLOR="#97c7dc" STYLE="oval">
+<node TEXT="h2aFreeplane" FOLDED="false" ID="ID_696401721" CREATED="1610381621824" MODIFIED="1741365093907" LINK="https://github.com/jfriedlein/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch" BACKGROUND_COLOR="#97c7dc" STYLE="oval">
 <font SIZE="16" BOLD="true" ITALIC="true"/>
 <hook NAME="MapStyle">
     <properties edgeColorConfiguration="#808080ff,#ff0000ff,#0000ffff,#00ff00ff,#ff00ffff,#00ffffff,#7c0000ff,#00007cff,#007c00ff,#7c007cff,#007c7cff,#7c7c00ff" show_icon_for_attributes="true" show_tags="UNDER_NODES" associatedTemplateLocation="template:/standard-1.6.mm" show_note_icons="true" fit_to_viewport="false"/>
@@ -73,9 +73,9 @@
 </stylenode>
 </map_styles>
 </hook>
-<hook NAME="AutomaticEdgeColor" COUNTER="11" RULE="ON_BRANCH_CREATION"/>
+<hook NAME="AutomaticEdgeColor" COUNTER="13" RULE="ON_BRANCH_CREATION"/>
 <attribute NAME="name" VALUE="h2aFreeplane"/>
-<attribute NAME="version" VALUE="v2.1" OBJECT="org.freeplane.features.format.FormattedObject|java.lang.String&amp;#x7c;v2.1|number:decimal:#0.####"/>
+<attribute NAME="version" VALUE="v2.2" OBJECT="org.freeplane.features.format.FormattedObject|java.lang.String&amp;#x7c;v2.2|number:decimal:#0.####"/>
 <attribute NAME="author" VALUE="jfriedlein"/>
 <attribute NAME="freeplaneVersionFrom" VALUE="v1.6"/>
 <attribute NAME="freeplaneVersionTo" VALUE=""/>
@@ -244,7 +244,7 @@
 <attribute NAME="addons.${name}.h2aOpenPdfOnAnnotPage" VALUE="h2aOpenPdfOnAnnotPage"/>
 </node>
 </node>
-<node TEXT="deinstall" POSITION="top_or_left" ID="ID_935593604" CREATED="1734939579324" MODIFIED="1735029231016">
+<node TEXT="deinstall" POSITION="top_or_left" ID="ID_935593604" CREATED="1734939579324" MODIFIED="1741366195683">
 <edge COLOR="#00007c"/>
 <richcontent TYPE="NOTE">
 <html>
@@ -260,8 +260,14 @@
 <attribute_layout NAME_WIDTH="54 pt" VALUE_WIDTH="595.49998 pt"/>
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}.script.xml"/>
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/*"/>
+<attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/h2aFreeplane.groovy"/>
+<attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/h2aFreeplane_Python-Windows-executables/h2aFreeplane_caller.exe"/>
+<attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/h2aFreeplane_Python-Windows-executables/h2a_update_from_Freeplane_caller.exe"/>
+<attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/h2aFreeplane_Python-Linux-executables/h2aFreeplane_caller"/>
+<attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/h2aFreeplane_Python-Linux-executables/h2a_update_from_Freeplane_caller"/>
 <attribute NAME="delete" VALUE="${installationbase}/lib/H2A_utilityScripts.groovy"/>
 <attribute NAME="delete" VALUE="${installationbase}/scripts/h2aOpenPdfOnAnnotPage.groovy"/>
+<attribute NAME="delete" VALUE="${installationbase}/scripts/h2aSortAnnotsByPage.groovy"/>
 </node>
 <node TEXT="scripts" POSITION="bottom_or_right" ID="ID_1936517094" CREATED="1734939579340" MODIFIED="1734939579348">
 <edge COLOR="#007c00"/>
@@ -381,10 +387,10 @@
     </p>
   </body>
 </html></richcontent>
-<node TEXT="h2aFreeplane.groovy" ID="ID_795269269" CREATED="1734939894247" MODIFIED="1734940031818">
+<node TEXT="h2aFreeplane.groovy" ID="ID_795269269" CREATED="1734939894247" MODIFIED="1741365184748">
 <attribute NAME="menuTitleKey" VALUE="addons.${name}.h2aFreeplane"/>
 <attribute NAME="menuLocation" VALUE="main_menu_scripting/addons.${name}"/>
-<attribute NAME="executionMode" VALUE="on_single_node"/>
+<attribute NAME="executionMode" VALUE="ON_SELECTED_NODE"/>
 <attribute NAME="keyboardShortcut" VALUE=""/>
 <attribute NAME="execute_scripts_without_asking" VALUE="true"/>
 <attribute NAME="execute_scripts_without_file_restriction" VALUE="true"/>
@@ -392,44 +398,6 @@
 <attribute NAME="execute_scripts_without_exec_restriction" VALUE="true"/>
 <attribute NAME="execute_scripts_without_network_restriction" VALUE="true"/>
 </node>
-</node>
-<node TEXT="lib" POSITION="bottom_or_right" ID="ID_1463750689" CREATED="1734939579368" MODIFIED="1734939579372">
-<edge COLOR="#7c007c"/>
-<richcontent TYPE="NOTE">
-<html>
-  <head>
-    
-  </head>
-  <body>
-    <p>
-      An add-on may contain any number of nodes containing binary files (normally .jar files) to be added to the add-on's classpath.
-    </p>
-    <p>
-      
-    </p>
-    <p>
-      &#xa0;- The immediate child nodes contain the name of the file, e.g. 'mysql-connector-java-5.1.25.jar'). Put the file into a 'lib' subdirectory of the add-on base directory.
-    </p>
-    <p>
-      
-    </p>
-    <p>
-      &#xa0;- The child nodes of these nodes contain the actual files.
-    </p>
-    <p>
-      
-    </p>
-    <p>
-      &#xa0;- Any lib file will be extracted in &lt;installationbase&gt;/&lt;addonname&gt;/lib.
-    </p>
-    <p>
-      
-    </p>
-    <p>
-      &#xa0;- The files will be processed in the sequence as seen in the map.
-    </p>
-  </body>
-</html></richcontent>
 </node>
 <node TEXT="zips" POSITION="bottom_or_right" ID="ID_1519565703" CREATED="1734939579374" MODIFIED="1734939579377">
 <edge COLOR="#007c7c"/>
@@ -502,6 +470,44 @@
     </ul>
     <p>
       Images can be added automatically by releaseAddOn.groovy or must be uploaded into the map via the script <i>Tools-&gt;Scripts-&gt;Insert Binary</i>&#xa0;since they have to be (base64) encoded as simple strings.
+    </p>
+  </body>
+</html></richcontent>
+</node>
+<node TEXT="lib" POSITION="bottom_or_right" ID="ID_1845304889" CREATED="1741366262157" MODIFIED="1741366262165">
+<edge COLOR="#0000ff"/>
+<richcontent TYPE="NOTE">
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      An add-on may contain any number of nodes containing binary files (normally .jar files) to be added to the add-on's classpath.
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      &#xa0;- The immediate child nodes contain the name of the file, e.g. 'mysql-connector-java-5.1.25.jar'). Put the file into a 'lib' subdirectory of the add-on base directory.
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      &#xa0;- The child nodes of these nodes contain the actual files.
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      &#xa0;- Any lib file will be extracted in &lt;installationbase&gt;/&lt;addonname&gt;/lib.
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      &#xa0;- The files will be processed in the sequence as seen in the map.
     </p>
   </body>
 </html></richcontent>
