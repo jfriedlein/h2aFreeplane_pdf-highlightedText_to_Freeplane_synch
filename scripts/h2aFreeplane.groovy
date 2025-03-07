@@ -20,10 +20,22 @@ URI sourceUri
 Path scriptLocation = Paths.get(sourceUri)
 path_to_this_folder = scriptLocation.getParent().toString();
 
+
+// [https://stackoverflow.com/questions/42465028/how-can-i-determine-if-a-variable-exists-from-within-the-groovy-code-running-in]
+// Example usage: get_userSetting({H2A_userSettings.myVar}, "default")
+def get_userSetting(varNameExpr, defaultValue)
+{
+    try {
+        varNameExpr()
+    } catch (exc) {
+        defaultValue
+    }
+}
+
 // First part of the paths to main literature folder that are different for Linux and Windows
 // @note Without the leading "file:"
- path_to_lit_folder_Linux = ""
- path_to_lit_folder_Windows = ""
+ path_to_lit_folder_Linux = get_userSetting({H2A_userSettings.path_to_lit_folder_Linux}, "")
+ path_to_lit_folder_Windows = get_userSetting({H2A_userSettings.path_to_lit_folder_Windows}, "")
 
 // Determine the operating system to choose the Windows or Linux built of the Python-executables
 operatingSystem = H2A_utilityScripts.get_operatingSystem()
@@ -47,32 +59,33 @@ path_detour_for_local_tests = ""
 
 // ES=entry_separator: String used to separate entries that are grouped into a single string, e.g. an array ("annot_text","annot_ID_001") is stored as single string "annot text ;x; annot_ID_001"
 // @todo ES is hardcoded here and repeated in "h2a_highlightedText_to_annotation.py" (when changing, you need to change both)
-ES = " ;x; "
+ ES = " ;x; "
 // String to replace line-breaks "\n" when grouping a multi-line string into a single line
 // @todo line_break_replacer is hardcoded here and repeated in "h2a_highlightedText_to_annotation.py" (when changing, you need to change both)
-line_break_replacer = ' ;xnx; '
+ line_break_replacer = ' ;xnx; '
 
 error_phrase = ">ERROR>"
 
-sort_newly_added_annotationNodes_by_page = true
+sort_newly_added_annotationNodes_by_page = get_userSetting({H2A_userSettings.sort_newly_added_annotationNodes_by_page}, true)
 
-color_newly_added_annotationNodes = true
+color_newly_added_annotationNodes = get_userSetting({H2A_userSettings.color_newly_added_annotationNodes}, true)
+
 // Color used to mark newly added annotations
- Color DARK_GREEN = new Color(0,102,0);
+ Color color_of_added_annotationNodes = get_userSetting({H2A_userSettings.color_of_added_annotationNodes}, new Color(0,102,0))
 
 
 // Annotation nodes in Freeplane can use the colour of the pdf annotations. E.g. if you colour the annotation in the pdf red, the node in Freeplane will also be coloured red, and vice versa.
- colour_node_in_annotColour = true
+ colour_node_in_annotColour = get_userSetting({H2A_userSettings.colour_node_in_annotColour}, true)
 // Opacity of above background colour (0: transparent, 1: opac)
- opacity_background_colour = 0.3
+ opacity_background_colour = get_userSetting({H2A_userSettings.opacity_background_colour}, 0.3)
 // Most pdf viewers use a default color, often similar to yellow ([1,1,0]), for highlighting, to avoid all nodes with default colour to appear yellowish in the mindmap, we offer the option to ignore colours that are close (with adjustable tolerance) to a user-defined colour.
  // Set rgb-values for annotations colour to be ignored. Use rgb-values (0...1). Deactive the annotColour_to_be_ignored by setting it to an empty list "[]".
-  annotColour_to_be_ignored = [1,1,0]
+  annotColour_to_be_ignored = get_userSetting({H2A_userSettings.annotColour_to_be_ignored}, [1,1,0])
  // A tolerance of 0, will only ignore exactly annotColour_to_be_ignored, whereas a tolerance of more than sqrt(3) will ignore every colour
-  annotColour_to_be_ignored_tolerance = 0.25
+  annotColour_to_be_ignored_tolerance = get_userSetting({H2A_userSettings.annotColour_to_be_ignored_tolerance}, 0.25)
 
 // Optionally add an attribute to all new annotation nodes containing a backup file path to the pdf
- add_backup_filepath_attribute = true
+ add_backup_filepath_attribute = get_userSetting({H2A_userSettings.add_backup_filepath_attribute}, true)
 
 // [thanks to perplexity.ai]
 class ColorChecker
@@ -307,7 +320,7 @@ try
            {
                // Reset the font colour from green (marked new annotations) back to default (black), but only if error status is "ok" ("error" use text colour red)
                // @Note (@BUGfix) Changing the font color here is seen as modification of the node as if its content was changed. Therefore, a change in the pdf of this annotation will result in conflicting changes (change in pdf and in freeplane), even though the content of the annotation was not changed in freeplane. Therefore, the actual "lastModifiedAt" time is stored, then the text color is changed, and then the old/actual modification is written over the falsely changed lastModifiedAt time
-                if ( child.style.getTextColor()==DARK_GREEN && child["annot_status"].contains("ok") )
+                if ( child.style.getTextColor()==color_of_added_annotationNodes && child["annot_status"].contains("ok") )
                 {
 	                node_lastModified_tmp = child.lastModifiedAt
                     child.style.setTextColor()
@@ -492,7 +505,7 @@ try
                 if ( sort_newly_added_annotationNodes_by_page )
                 {
         	        // Shift the node upwards until its annot_page fits to the annot_page of the node above
-                    // @todo Put this into a function and make it callable depending on user-parameter (together with the above reset of dark_green
+                    // @todo Put this into a function and make it callable depending on user-parameter (together with the above reset of color_of_added_annotationNodes
 	                 // Collect node_children1 for sorting (repetitive code findChildrenGenerations)
                      // @note This must be done before every attempt to use "moveTo", because by "createChild" the list changes, therefore the indices change
 	                  def node_children1 = []
@@ -508,7 +521,7 @@ try
                       counter_i = 0
                       if ( color_newly_added_annotationNodes )
                       {
-                        child.style.setTextColor(DARK_GREEN)
+                        child.style.setTextColor(color_of_added_annotationNodes)
                       }
         	          node_children1.find
                       {
