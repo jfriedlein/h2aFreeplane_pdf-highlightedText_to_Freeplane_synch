@@ -4,14 +4,26 @@
 
 // @note For Windows the paths to the pdf-viewer executables can contain blank spaces but all backslashes "\" need to be replaced by slashes "/" for the paths to work in Java
 
+// [https://stackoverflow.com/questions/42465028/how-can-i-determine-if-a-variable-exists-from-within-the-groovy-code-running-in]
+// Example usage: get_userSetting({H2A_userSettings.myVar}, "default")
+// @note: Identical to get_userSetting function in "h2aFreeplane.groovy" (for some reason this cannot be unified in "H2A_utilityScripts.groovy")
+def get_userSetting(varNameExpr, defaultValue)
+{
+    try {
+        varNameExpr()
+    } catch (exc) {
+        defaultValue
+    }
+}
+
 // USER-Parameters
-pdf_viewer_Linux = "default"
-pdf_viewer_Windows = "default"
+pdf_viewer_Linux = get_userSetting({H2A_userSettings.pdf_viewer_Linux}, "default")
+pdf_viewer_Windows = get_userSetting({H2A_userSettings.pdf_viewer_Windows}, "default")
 
 // First part of the paths to main literature folder that are different for Linux and Windows
 // @note Without the leading "file:"
-path_to_lit_folder_Linux = ""
-path_to_lit_folder_Windows= ""
+path_to_lit_folder_Linux = get_userSetting({H2A_userSettings.path_to_lit_folder_Linux}, "")
+path_to_lit_folder_Windows= get_userSetting({H2A_userSettings.path_to_lit_folder_Windows}, "")
 
 // Determine the operating system to choose the Windows or Linux built of the Python-executables
 operatingSystem = H2A_utilityScripts.get_operatingSystem()
