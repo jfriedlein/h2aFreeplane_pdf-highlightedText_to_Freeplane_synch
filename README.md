@@ -134,6 +134,10 @@ Docear (https://docear.org/) is a fantastic system, which might has been born to
     - Manually insert parameters from the "H2A_userSettings_DEFAULT.groovy" file, that might have been added in a future release.
 
 ## ToDo
+- create new [python environment](https://www.youtube.com/watch?v=Y21OR1OPC9A) to collect all packages fresh, upload the requirements file
+- when the pdf annotation is coloured with a transparency of e.g. 68 % the groovy checkIfColorAccept(*) seems to detect a different colour distance causes the colour to be shown in the mindmap. Debug the colour values for annotations with transparency and try to filter out transparency value.
+- pdf text: how to fix the pdf issues with letter combinations "ff", "fi", ... Is this a special ascii code? How to automatically replace e.g. "ﬁ" by "fi", "ﬂ" by "fl", "ﬃ", by "ffi"
+- optimise: running h2a on a fresh pdf with a few dozen annotation takes quite long (the processing time shown in the H2A-protocol is less than 1 s, but still it overall takes about 20 s for a pdf with 25 pages and 33 annotations even though the processing time is 0.31 s), e.g. if node contains no annotations, skip all the search loops since every newly added annotation cannot have existed previously
 - Annotation nodes need to stay as children (or grandchildren, ...) of the parent pdf-node, because only the parent pdf-node contains the link to the PDF as node link. So you cannot move an annotation node somewhere completely else, which was possible in Docear. The former approach is beneficial in case the path to the pdf changes, then we only need to change the path once in the parent node.
 - When using the button in front of an annotation node to open the pdf on the corresponding page, you need to click on the node first to select it. The script does not know which node started it based on the button, but only based on the currently selected node.
 - When hovering over the nodes the attributes and notes pop-up. This can be distracting, but is a Freeplane settings. Can this be deactivated?
@@ -141,6 +145,11 @@ Docear (https://docear.org/) is a fantastic system, which might has been born to
 - Check different timezone formats such as SumatraPDF "...Z" instead of "+1'00"
 - Currently only file ending ".pdf" is detected, not ".PDF", maybe use ".toLowerCase()" in all those places
 - Microsoft Edge: When changing the annotation text of an existing annotation, Edge does not change the modification time of the annotation, hence h2a cannot detect this change. Is this an Edge bug/feature?
+- clean and optimise: Already the same problem as with many existing old and established softwares, it works well, but no complete and extensive test cases exist, therefore any change or restructuring of the code may lead to bugs, bad software design and development process
+- e.g. publish via https://docs.freeplane.org/scripting/How_to_publish_add-ons.html
+- sort_rectangles, increase "endless loop" parameter to allow for strange ppt powerpoint (like _Schmied) where each letter has a rectangle
+- what happens when a pdf page is deleted, e.g. the first page, how messed up will the annotation/synch be, how to fix this?
 
-## Testing status (27.02.2025): 820 pdfs, 18646 annotations
+
+## Testing status (26.11.2025): ~1500 pdfs, ~30000 annotations
 
