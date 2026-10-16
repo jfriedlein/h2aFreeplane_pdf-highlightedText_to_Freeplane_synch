@@ -107,7 +107,7 @@ class ColorChecker
     }
 }
 
-// Choose a debugging level, that is active when use node scripts via println or in "log" files. 0=no debugging output, 1=first level of debugging outputs, 2=..., 99=all levels
+// Choose a debugging level, that is active when use node scripts via println or in "log" files. 0=no debugging output (production code), 1=first level of debugging outputs, 2=..., 99=all levels
  debugging = 0
 
 
